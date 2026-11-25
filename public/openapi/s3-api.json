@@ -1,0 +1,129 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Bucket0 S3-Compatible API",
+    "version": "1.3.0",
+    "description": "AWS S3-compatible object storage gateway. Use standard AWS SDKs, AWS CLI, rclone, Cyberduck, or WinSCP with endpoint https://s3.bucket0.com and access keys from the Bucket0 dashboard.",
+    "contact": {
+      "name": "Bucket0",
+      "url": "https://bucket0.com/docs",
+      "email": "team@bucket0.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://s3.bucket0.com",
+      "description": "S3 API subdomain (path-style and virtual-hosted-style)"
+    },
+    {
+      "url": "https://bucket0.com/api/s3-api",
+      "description": "Same gateway via path on the main site"
+    }
+  ],
+  "security": [{ "AwsSigV4": [] }],
+  "components": {
+    "securitySchemes": {
+      "AwsSigV4": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "AWS Signature Version 4. Create access keys in the Bucket0 dashboard (S3 API section)."
+      }
+    }
+  },
+  "paths": {
+    "/{bucket}": {
+      "get": {
+        "summary": "List objects in a bucket",
+        "operationId": "listObjects",
+        "parameters": [
+          { "name": "bucket", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "prefix", "in": "query", "schema": { "type": "string" } },
+          { "name": "delimiter", "in": "query", "schema": { "type": "string" } },
+          { "name": "max-keys", "in": "query", "schema": { "type": "integer" } },
+          { "name": "continuation-token", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "ListBucketResult XML",
+            "content": { "application/xml": { "schema": { "type": "string" } } }
+          },
+          "403": { "description": "Access denied" }
+        }
+      },
+      "put": {
+        "summary": "Create bucket (if supported by plan)",
+        "operationId": "createBucket",
+        "parameters": [
+          { "name": "bucket", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Bucket created" }
+        }
+      }
+    },
+    "/{bucket}/{key}": {
+      "get": {
+        "summary": "Get object",
+        "operationId": "getObject",
+        "parameters": [
+          { "name": "bucket", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "key", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Object bytes",
+            "content": {
+              "application/octet-stream": {
+                "schema": { "type": "string", "format": "binary" }
+              }
+            }
+          },
+          "404": { "description": "Not found" }
+        }
+      },
+      "put": {
+        "summary": "Put object",
+        "operationId": "putObject",
+        "parameters": [
+          { "name": "bucket", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "key", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/octet-stream": {
+              "schema": { "type": "string", "format": "binary" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Object stored" }
+        }
+      },
+      "delete": {
+        "summary": "Delete object",
+        "operationId": "deleteObject",
+        "parameters": [
+          { "name": "bucket", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "key", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "204": { "description": "Deleted" }
+        }
+      },
+      "head": {
+        "summary": "Head object",
+        "operationId": "headObject",
+        "parameters": [
+          { "name": "bucket", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "key", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Object metadata" },
+          "404": { "description": "Not found" }
+        }
+      }
+    }
+  }
+}

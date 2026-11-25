@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "agentbucket",
+      "type": "skill-md",
+      "description": "Use Bucket0 AgentBucket to store, retrieve, share, and search files for AI agents via REST (Bearer b0ak_) or remote MCP.",
+      "url": "https://bucket0.com/.well-known/agent-skills/agentbucket/SKILL.md",
+      "digest": "sha256:19593147d84ada6fb81dbc537658b7ce070ac95fcee89b3c434c22ce32efbe13"
+    },
+    {
+      "name": "s3-api",
+      "type": "skill-md",
+      "description": "Access Bucket0 storage with any S3-compatible client using AWS Signature Version 4 against https://s3.bucket0.com.",
+      "url": "https://bucket0.com/.well-known/agent-skills/s3-api/SKILL.md",
+      "digest": "sha256:47bb5c8eba0f7d946370e01785cbc3f2976634a1df0bc8991bfdb42726df1606"
+    },
+    {
+      "name": "pdf-image-tools",
+      "type": "skill-md",
+      "description": "Use Bucket0 free browser-based PDF and image tools. Processing stays on-device; nothing is uploaded to Bucket0 servers.",
+      "url": "https://bucket0.com/.well-known/agent-skills/pdf-image-tools/SKILL.md",
+      "digest": "sha256:560fe4dcc28f98e3f0c2e775c49e5dd1e738405288ed09ecd405bcd68eb3e986"
+    }
+  ]
+}

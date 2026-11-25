@@ -1,0 +1,305 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Bucket0 AgentBucket API",
+    "version": "1.3.0",
+    "description": "REST API for AI agents and CLI tools to upload, download, list, share, and search files in AgentBucket. Authenticate with Bearer API keys (prefix b0ak_). Create keys in the Bucket0 dashboard after signing in.",
+    "contact": {
+      "name": "Bucket0",
+      "url": "https://bucket0.com/contact",
+      "email": "team@bucket0.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://bucket0.com/api/agent-bucket",
+      "description": "Production AgentBucket API"
+    }
+  ],
+  "security": [{ "AgentApiKey": [] }],
+  "components": {
+    "securitySchemes": {
+      "AgentApiKey": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "b0ak_",
+        "description": "Agent API key created in the Bucket0 dashboard. Format: Authorization: Bearer b0ak_..."
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" },
+          "code": { "type": "string" },
+          "details": { "type": "object" }
+        }
+      },
+      "AgentFile": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "fileName": { "type": "string" },
+          "size": { "type": "integer" },
+          "mimeType": { "type": "string" },
+          "isStarred": { "type": "boolean" },
+          "uploadedVia": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/files/upload": {
+      "post": {
+        "summary": "Upload a file",
+        "operationId": "uploadFile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary" },
+                  "filename": {
+                    "type": "string",
+                    "description": "Optional relative key path, e.g. research/results.json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Upload succeeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "key": { "type": "string" },
+                    "fileName": { "type": "string" },
+                    "size": { "type": "integer" },
+                    "destination": { "type": "string", "enum": ["agent", "drive"] }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "402": { "description": "Quota or plan limit", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      }
+    },
+    "/files": {
+      "get": {
+        "summary": "List agent files",
+        "operationId": "listFiles",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "pageSize", "in": "query", "schema": { "type": "integer", "default": 50, "maximum": 100 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated file list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/AgentFile" }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": { "type": "integer" },
+                        "page": { "type": "integer" },
+                        "pageSize": { "type": "integer" },
+                        "hasMore": { "type": "boolean" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an agent file",
+        "operationId": "deleteFile",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Relative file key"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "success": { "type": "boolean" } }
+                }
+              }
+            }
+          },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/files/download": {
+      "get": {
+        "summary": "Download a file",
+        "operationId": "downloadFile",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Binary file stream",
+            "content": {
+              "application/octet-stream": {
+                "schema": { "type": "string", "format": "binary" }
+              }
+            }
+          },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/files/folder": {
+      "post": {
+        "summary": "Create a folder",
+        "operationId": "createFolder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["path"],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Folder path, e.g. reports/daily"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Folder created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "path": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/share": {
+      "post": {
+        "summary": "Create a public share/stream link",
+        "operationId": "shareFile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["key"],
+                "properties": {
+                  "key": { "type": "string" },
+                  "allowDownload": { "type": "boolean", "default": true }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Share link created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "linkId": { "type": "string" },
+                    "shareUrl": { "type": "string", "format": "uri" },
+                    "streamUrl": { "type": "string", "format": "uri" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memory/search": {
+      "post": {
+        "summary": "Semantic memory search (Pro+)",
+        "operationId": "searchMemory",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["query"],
+                "properties": {
+                  "query": { "type": "string" },
+                  "topK": { "type": "integer", "default": 8 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ranked memory snippets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          },
+          "402": { "description": "Plan upgrade required" },
+          "503": { "description": "Memory search unavailable" }
+        }
+      }
+    }
+  }
+}

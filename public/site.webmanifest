@@ -1,0 +1,24 @@
+{
+    "name": "Bucket0",
+    "short_name": "Bucket0",
+    "icons": [
+        {
+            "src": "/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "/b0-logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/b0-logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#f6f2f9",
+    "background_color": "#f6f2f9",
+    "display": "standalone"
+}

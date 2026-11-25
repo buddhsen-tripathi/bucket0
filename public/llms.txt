@@ -1,0 +1,78 @@
+# Bucket0
+
+> Encrypted cloud storage for developers and AI agents. S3-compatible API, AgentBucket REST + MCP, external buckets, teams, and free browser-based PDF/image tools.
+
+## About
+
+Bucket0 is a cloud storage platform for privacy-conscious users, developers, and AI agents. Access storage via AgentBucket (Bearer API keys / MCP) or an S3-compatible gateway, connect your own buckets, collaborate with teams, or use free on-device PDF and image tools.
+
+## For AI agents
+
+- AgentBucket REST: https://bucket0.com/api/agent-bucket (Bearer `b0ak_...`)
+- Remote MCP: https://mcp.bucket0.com/mcp
+- Agent registration: https://bucket0.com/auth.md
+- API docs: https://bucket0.com/docs
+- OpenAPI (AgentBucket): https://bucket0.com/openapi/agent-bucket.json
+- OpenAPI (S3): https://bucket0.com/openapi/s3-api.json
+- API catalog: https://bucket0.com/.well-known/api-catalog
+- MCP server card: https://bucket0.com/.well-known/mcp/server-card.json
+- Agent skills index: https://bucket0.com/.well-known/agent-skills/index.json
+- OAuth protected resource: https://bucket0.com/.well-known/oauth-protected-resource
+
+Request `Accept: text/markdown` on `/`, `/docs`, `/pricing`, or `/tools` for markdown responses.
+
+## Key Features
+
+### AgentBucket
+- Upload, download, list, delete, and share files with Bearer API keys
+- Remote MCP for Claude Code, Cursor, and other MCP clients
+- Semantic memory search on Pro and Scale plans
+- Encrypted at rest (AES-128-GCM)
+
+### S3-Compatible API
+- Endpoint: https://s3.bucket0.com
+- Works with AWS CLI, SDKs, WinSCP, Cyberduck, rclone
+- Generate access keys from the dashboard
+
+### External Bucket Management
+- Connect AWS S3, Cloudflare R2, DigitalOcean Spaces, Backblaze B2, Azure Blob, and any S3-compatible provider
+- Manage buckets from one dashboard
+- Credentials encrypted with AES-256
+
+### Encrypted Cloud Storage
+- Personal Drive with encryption by default
+- Data is never used to train AI models
+
+### Team Collaboration
+- Create teams and invite members (paid plans)
+- Granular permissions and activity logs
+- Team chat on Pro and Scale
+
+### Free PDF & Image Tools
+Browser-based tools — files never leave the device.
+- PDF: merge, split, extract, protect, unlock, sign, watermark, redact, organize, page numbers, JPG to PDF
+- Image: resize, rotate, crop, compress, convert, watermark, filter
+
+## Pricing
+
+- **Free**: 5 GB encrypted storage, 1 external bucket, S3 API (1 bucket), AgentBucket, file sharing
+- **Starter**: $7/month (or $5/month annual) - 150 GB, 10 external buckets, S3 API (10 buckets), 1 team with 3 members
+- **Pro**: $19/month (or $15/month annual) - 700 GB, AgentBucket memory, team chat, 5 members
+- **Scale**: $45/month (or $35/month annual) - 2 TB, 2 teams with 10 members each
+
+## Pages
+
+- [Home](https://bucket0.com): Product overview
+- [Docs](https://bucket0.com/docs): AgentBucket and S3 API guides
+- [Pricing](https://bucket0.com/pricing): Plan comparison
+- [Tools](https://bucket0.com/tools): Free PDF and image tools
+- [Auth for agents](https://bucket0.com/auth.md): Credential registration
+- [Changelog](https://bucket0.com/changelog): Release notes
+- [Contact](https://bucket0.com/contact): Support
+- [Privacy](https://bucket0.com/privacy) · [Terms](https://bucket0.com/terms)
+
+## Contact
+
+- Website: https://bucket0.com
+- Email: team@bucket0.com
+- Support: https://bucket0.com/contact

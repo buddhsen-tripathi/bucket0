@@ -1,0 +1,29 @@
+{
+  "serverInfo": {
+    "name": "AgentBucket",
+    "version": "1.3.0",
+    "title": "Bucket0 AgentBucket",
+    "description": "Encrypted file storage, sharing, and memory search for AI agents. Connect via Streamable HTTP MCP or the AgentBucket REST API (Bearer b0ak_ keys)."
+  },
+  "description": "Bucket0 AgentBucket MCP server — upload/download files, manage folders, create share links, and search agent memory.",
+  "url": "https://mcp.bucket0.com/mcp",
+  "transport": {
+    "type": "streamable-http"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.bucket0.com/mcp"
+    }
+  ],
+  "capabilities": {
+    "tools": true,
+    "resources": false,
+    "prompts": false
+  },
+  "authentication": {
+    "required": true,
+    "schemes": ["oauth2", "bearer"],
+    "instructions": "Use OAuth (Claude Code / Cursor remote MCP) or an AgentBucket API key (b0ak_) from https://bucket0.com/dashboard. See https://bucket0.com/auth.md"
+  }
+}
