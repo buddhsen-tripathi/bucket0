@@ -49,9 +49,8 @@ export async function loader(args: LoaderFunctionArgs) {
   });
 }
 
-// Optional analytics and ads; set these at build time to enable them.
+// Optional Google Analytics; set at build time to enable it.
 const GA_MEASUREMENT_ID = import.meta.env.NEXT_PUBLIC_GA_MEASUREMENT_ID as string | undefined;
-const ADSENSE_CLIENT_ID = import.meta.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID as string | undefined;
 
 const gaSnippet = (id: string) => `
 window.dataLayer = window.dataLayer || [];
@@ -73,13 +72,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />
             <script dangerouslySetInnerHTML={{ __html: gaSnippet(GA_MEASUREMENT_ID) }} />
           </>
-        )}
-        {ADSENSE_CLIENT_ID && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
-            crossOrigin="anonymous"
-          />
         )}
       </head>
       <body className="antialiased bg-background text-foreground">

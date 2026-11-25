@@ -150,33 +150,3 @@ export function getFileType(fileName: string): FileFilter {
   return "all";
 }
 
-/**
- * Check if a file can be previewed in the browser
- */
-export function isPreviewable(fileName: string): boolean {
-  const ext = fileName.split(".").pop()?.toLowerCase();
-  if (!ext) return false;
-
-  const previewableExts = [
-    // Images
-    "jpg",
-    "jpeg",
-    "png",
-    "gif",
-    "webp",
-    "svg",
-    "bmp",
-    // Videos
-    "mp4",
-    "webm",
-    // Audio
-    "mp3",
-    "wav",
-    "ogg",
-    // Documents
-    "pdf",
-    "txt",
-  ];
-
-  return previewableExts.includes(ext);
-}

@@ -4,7 +4,6 @@
 
 import { useMemo } from "react";
 import {
-  data,
   redirect as routerRedirect,
   useLocation,
   useNavigate,
@@ -39,11 +38,6 @@ export function useSearchParams(): URLSearchParams {
 
 export function useParams<T extends Record<string, string | undefined> = Record<string, string | undefined>>(): T {
   return routerUseParams() as T;
-}
-
-/** Throw a 404 that React Router renders through the nearest ErrorBoundary. */
-export function notFound(): never {
-  throw data(null, { status: 404 });
 }
 
 /** Throw a redirect from a loader or action. */

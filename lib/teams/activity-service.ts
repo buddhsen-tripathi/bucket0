@@ -234,24 +234,6 @@ export const activityService = new ActivityService();
 
 // Helper functions for common activity logging patterns
 
-export async function logFileUpload(
-  teamId: string,
-  userId: string,
-  fileName: string,
-  fileSize: number,
-  fileId?: string
-) {
-  await activityService.logActivity({
-    teamId,
-    userId,
-    action: "file.upload",
-    resourceType: "file",
-    resourceId: fileId,
-    description: `Uploaded ${fileName}`,
-    metadata: { fileName, fileSize },
-  });
-}
-
 export async function logBatchUpload(
   teamId: string,
   userId: string,
@@ -308,23 +290,6 @@ function findCommonFolderPrefix(fileNames: string[]): string | null {
   const allHavePrefix = fileNames.every((name) => name.startsWith(commonFolder + "/"));
 
   return allHavePrefix ? commonFolder + "/" : null;
-}
-
-export async function logFileDownload(
-  teamId: string,
-  userId: string,
-  fileName: string,
-  fileId?: string
-) {
-  await activityService.logActivity({
-    teamId,
-    userId,
-    action: "file.download",
-    resourceType: "file",
-    resourceId: fileId,
-    description: `Downloaded ${fileName}`,
-    metadata: { fileName },
-  });
 }
 
 export async function logFileDelete(

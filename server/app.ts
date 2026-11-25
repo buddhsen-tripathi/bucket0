@@ -11,7 +11,7 @@ import { Hono, type Context } from "hono";
 import { createRequestHandler, RouterContextProvider, type ServerBuild } from "react-router";
 import { requestContextMiddleware } from "./request-context-middleware";
 import { clerkApiMiddleware } from "./clerk-api-middleware";
-import { METHODS, mountRouteHandlers, type RouteModule } from "./route-adapter";
+import { mountRouteHandlers, type RouteModule } from "./route-adapter";
 import {
   CORS_HEADERS,
   addSecurityHeaders,
@@ -159,9 +159,3 @@ const reactRouter = createRequestHandler(
 );
 
 app.all("*", (c) => reactRouter(c.req.raw, new RouterContextProvider()));
-
-/** Exposed for debugging: `GET /api/health` lists mounted routes in dev. */
-export const mountedRoutes = mounted.map((r) => ({
-  path: r.honoPath,
-  methods: METHODS.filter((m) => r.module[m]),
-}));

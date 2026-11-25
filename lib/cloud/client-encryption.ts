@@ -131,18 +131,3 @@ export async function secureGetItem(key: string, userId: string): Promise<string
   }
 }
 
-/**
- * Remove item from localStorage
- */
-export function secureRemoveItem(key: string): void {
-  localStorage.removeItem(key);
-}
-
-/**
- * Check if Web Crypto API is available
- */
-export function isEncryptionSupported(): boolean {
-  return typeof crypto !== 'undefined' &&
-         typeof crypto.subtle !== 'undefined' &&
-         typeof crypto.subtle.encrypt === 'function';
-}

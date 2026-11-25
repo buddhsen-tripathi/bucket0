@@ -14,8 +14,6 @@ function createRouteMatcher(patterns: string[]): (pathname: string) => boolean {
   return (pathname) => regexes.some((re) => re.test(pathname));
 }
 
-export const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
-
 export const isCorsEnabledRoute = createRouteMatcher([
   "/api/s3-api(.*)",
   "/api/agent-bucket/files/upload",
@@ -118,7 +116,7 @@ export function isValidRequest(req: Request): boolean {
 
 const csp = () => [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://*.bucket0.com https://*.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://*.googlesyndication.com https://static.cloudflareinsights.com https://adservice.google.com https://www.googleadservices.com https://cdn.jsdelivr.net",
+  "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://*.bucket0.com https://*.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com https://cdn.jsdelivr.net",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "connect-src 'self' https: wss://*.clerk.com wss://*.bucket0.com",

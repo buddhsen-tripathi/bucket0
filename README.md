@@ -154,7 +154,7 @@ Before deploying, run `bun run typecheck`, `bun run build` and `bun run lint`, a
 
 ### Analytics
 
-Google Analytics and AdSense are off unless you set `NEXT_PUBLIC_GA_MEASUREMENT_ID` or `NEXT_PUBLIC_ADSENSE_CLIENT_ID` at build time.
+Google Analytics is off unless you set `NEXT_PUBLIC_GA_MEASUREMENT_ID` at build time.
 
 ## Contributing
 

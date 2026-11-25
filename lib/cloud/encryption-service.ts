@@ -139,20 +139,6 @@ export function calculateEncryptedSize(
 }
 
 /**
- * Calculate original size from encrypted size (approximate - for range requests)
- */
-export function calculateOriginalSize(
-  encryptedSize: number,
-  chunkSize: number = DEFAULT_CHUNK_SIZE
-): number {
-  // This is an approximation; actual size stored in database
-  const dataSize = encryptedSize - HEADER_SIZE;
-  const encryptedChunkSize = chunkSize + IV_LENGTH + AUTH_TAG_LENGTH;
-  const numChunks = Math.ceil(dataSize / encryptedChunkSize);
-  return dataSize - numChunks * (IV_LENGTH + AUTH_TAG_LENGTH);
-}
-
-/**
  * Encrypt a buffer using chunked encryption
  * Good for small files that fit in memory
  */
