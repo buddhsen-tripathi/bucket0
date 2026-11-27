@@ -118,8 +118,8 @@ export default function FileListGrid({
                       }}
                       className={`rounded transition-colors ${
                         isStarred
-                          ? "text-yellow-500 hover:text-yellow-600"
-                          : "text-muted-foreground/40 hover:text-yellow-500"
+                          ? "text-warning hover:text-warning"
+                          : "text-muted-foreground/40 hover:text-warning"
                       }`}
                       title={isStarred ? "Remove from starred" : "Add to starred"}
                     >
@@ -222,8 +222,8 @@ export default function FileListGrid({
                 }}
                 className={`absolute top-2 right-2 w-5 h-5 rounded flex items-center justify-center transition-all z-10 ${
                   isStarred
-                    ? "text-yellow-500"
-                    : "text-muted-foreground/40 hover:text-yellow-500 opacity-0 group-hover:opacity-100"
+                    ? "text-warning"
+                    : "text-muted-foreground/40 hover:text-warning opacity-0 group-hover:opacity-100"
                 }`}
                 title={isStarred ? "Remove from starred" : "Add to starred"}
               >

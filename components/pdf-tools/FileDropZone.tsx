@@ -1,6 +1,6 @@
 
 import { useCallback, useRef, useState } from "react";
-import { Upload, FileText, X } from "lucide-react";
+import { FileIcon, MultipleCrossCancelIcon, UploadUpIcon } from "@/components/icons";
 import { cn } from "@/lib/shared/utils";
 
 interface FileDropZoneProps {
@@ -81,21 +81,33 @@ export default function FileDropZone({
   }, []);
 
   const hasFiles = files.length > 0;
+  const browse = () => inputRef.current?.click();
 
   return (
     <div className="space-y-4">
       <div
-        onClick={() => inputRef.current?.click()}
+        role="button"
+        tabIndex={0}
+        aria-label={label || "Choose files"}
+        onClick={browse}
+        onKeyDown={(e) => {
+          if (e.target !== e.currentTarget) return;
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            browse();
+          }
+        }}
         onDrop={onDrop}
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         className={cn(
-          "relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-300",
-          "flex flex-col items-center justify-center gap-3 p-10",
+          "relative cursor-pointer rounded-[10px] border border-dashed outline-none transition-colors duration-200",
+          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ink)]",
+          "flex flex-col items-center justify-center gap-4 px-6 py-12 sm:py-14",
           isDragging
-            ? "border-primary bg-primary/5 scale-[1.01]"
-            : "border-border hover:border-primary/30 hover:bg-muted/20",
-          hasFiles && "p-6"
+            ? "border-[var(--violet)] bg-[var(--violet-soft)]"
+            : "border-[color-mix(in_oklch,var(--ink)_24%,transparent)] bg-[var(--paper)] hover:border-[color-mix(in_oklch,var(--ink)_45%,transparent)]",
+          hasFiles && "items-stretch gap-3 p-3 sm:p-3"
         )}
       >
         <input
@@ -109,36 +121,42 @@ export default function FileDropZone({
 
         {!hasFiles && (
           <>
-            <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Upload className="w-6 h-6 text-primary" />
-            </div>
+            <span
+              className={cn(
+                "grid size-11 place-items-center rounded-[8px] border bg-[var(--paper-card)] transition-colors",
+                isDragging ? "border-[var(--violet)] text-[var(--violet)]" : "border-[var(--line)] text-[var(--ink)]"
+              )}
+            >
+              <UploadUpIcon aria-hidden className="size-5" />
+            </span>
             <div className="text-center">
-              <p className="text-foreground font-medium">
-                {label || "Drop your PDF here or click to browse"}
+              <p className="text-[15px] font-medium text-[var(--ink)]">
+                {isDragging ? "Drop to add" : label || "Drop your PDF here or click to browse"}
               </p>
-              <p className="text-muted-foreground text-sm mt-1">
+              <p className="mt-1 font-mono text-[12px] text-[var(--ink-soft)]">
                 {sublabel || `${accept} up to ${maxSizeMb}MB`}
               </p>
             </div>
+            <span className="inline-flex items-center gap-2 rounded-[3px] bg-[var(--ink)] px-3.5 py-2 text-[13px] font-medium text-[var(--paper)]">
+              {multiple ? "Choose files" : "Choose a file"}
+            </span>
           </>
         )}
 
         {hasFiles && (
-          <div className="w-full space-y-2">
+          <div className="w-full space-y-1.5">
             {files.map((file, i) => (
               <div
                 key={`${file.name}-${i}`}
-                className="flex items-center gap-3 bg-muted/40 rounded-sm px-4 py-3 hover:bg-muted/60 transition-colors"
+                className="flex items-center gap-3 rounded-[6px] border border-[var(--line)] bg-[var(--paper-card)] px-3.5 py-2.5"
               >
-                <FileText className="w-5 h-5 text-primary shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">
-                    {file.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatFileSize(file.size)}
-                  </p>
-                </div>
+                <FileIcon aria-hidden className="size-4 shrink-0 text-[var(--ink-soft)]" />
+                <p className="min-w-0 flex-1 truncate text-[13.5px] font-medium text-[var(--ink)]">
+                  {file.name}
+                </p>
+                <p className="shrink-0 font-mono text-[11.5px] tabular-nums text-[var(--ink-soft)]">
+                  {formatFileSize(file.size)}
+                </p>
                 {onRemove && (
                   <button
                     type="button"
@@ -146,19 +164,20 @@ export default function FileDropZone({
                       e.stopPropagation();
                       onRemove(i);
                     }}
-                    className="p-1 hover:bg-destructive/10 rounded transition-colors"
+                    aria-label={`Remove ${file.name}`}
+                    className="-mr-1 grid size-7 shrink-0 place-items-center rounded-[3px] text-[var(--ink-soft)] transition-colors hover:bg-destructive/10 hover:text-destructive"
                   >
-                    <X className="w-4 h-4 text-muted-foreground hover:text-destructive" />
+                    <MultipleCrossCancelIcon aria-hidden className="size-3.5" />
                   </button>
                 )}
               </div>
             ))}
             {limitMessage && (
-              <p className="text-center text-xs text-amber-600 dark:text-amber-400 pt-1">
+              <p className="pt-1 text-center text-xs text-warning dark:text-warning">
                 {limitMessage}
               </p>
             )}
-            <p className="text-center text-xs text-muted-foreground pt-1">
+            <p className="pt-1.5 pb-0.5 text-center text-[12px] text-[var(--ink-soft)]">
               {multiple
                 ? maxFiles && files.length >= maxFiles
                   ? `Maximum ${maxFiles} files reached`

@@ -128,7 +128,7 @@ export default function FileContextMenu({
               className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors whitespace-nowrap"
             >
               {item.isStarred ? (
-                <MdStar size={18} className="flex-shrink-0 text-yellow-500" />
+                <MdStar size={18} className="flex-shrink-0 text-warning" />
               ) : (
                 <MdStarOutline size={18} className="flex-shrink-0 text-muted-foreground" />
               )}

@@ -286,7 +286,7 @@ export default function FilePreview({
             {mode === "cloud" && onShare && (
               <button
                 onClick={onShare}
-                className="p-2 text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-500/10 rounded-sm transition-colors"
+                className="p-2 text-muted-foreground hover:text-primary dark:hover:text-primary hover:bg-primary/10 rounded-sm transition-colors"
                 title="Share"
               >
                 <Share2 size={16} />
@@ -295,7 +295,7 @@ export default function FilePreview({
             {mode === "cloud" && (
               <button
                 onClick={() => window.open(previewUrl, "_blank")}
-                className="p-2 text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10 rounded-sm transition-colors"
+                className="p-2 text-muted-foreground hover:text-success dark:hover:text-success hover:bg-success/10 rounded-sm transition-colors"
                 title="Open in new tab"
               >
                 <ExternalLink size={16} />

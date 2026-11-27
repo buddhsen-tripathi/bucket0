@@ -6,7 +6,7 @@
       "type": "skill-md",
       "description": "Use Bucket0 AgentBucket to store, retrieve, share, and search files for AI agents via REST (Bearer b0ak_) or remote MCP.",
       "url": "https://bucket0.com/.well-known/agent-skills/agentbucket/SKILL.md",
-      "digest": "sha256:19593147d84ada6fb81dbc537658b7ce070ac95fcee89b3c434c22ce32efbe13"
+      "digest": "sha256:044bd3eede2f559970945d97d086031b1c5468b6b900d68505d7d2b9ea05855a"
     },
     {
       "name": "s3-api",

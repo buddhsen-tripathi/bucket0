@@ -1,14 +1,13 @@
 
 import { useState, useEffect, useRef, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MdCheck } from "react-icons/md";
 import { Loader2 } from "lucide-react";
 import Link from "@/web/compat/link";
 import { useAuth } from "@clerk/react-router";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
+import { CheckTickCircleIcon } from "@/components/icons";
+import { SectionHead } from "@/components/site/SectionHead";
+import { button, container } from "@/components/site/styles";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/shared/utils";
 
@@ -47,7 +46,7 @@ function AnimatedPrice({ price, suffix }: { price: string; suffix?: string }) {
         </motion.span>
       </AnimatePresence>
       {suffix && (
-        <span className="text-muted-foreground text-sm font-normal">
+        <span className="ml-1 font-sans text-[14px] font-normal tracking-normal text-[var(--ink-soft)]">
           {suffix}
         </span>
       )}
@@ -135,7 +134,7 @@ const PLAN_TIERS: Record<string, number> = {
   scale: 3,
 };
 
-export const Pricing = ({ className }: { className?: string }) => {
+export const Pricing = ({ className, asPage = false }: { className?: string; asPage?: boolean }) => {
   const [isAnnual, setIsAnnual] = useState(true);
   const [isPending, startTransition] = useTransition();
   const { isSignedIn, isLoaded } = useAuth();
@@ -189,179 +188,146 @@ export const Pricing = ({ className }: { className?: string }) => {
     });
   };
 
+  const actionClass = (highlighted?: boolean) => cn(highlighted ? button.solid : button.outline, "mt-auto w-full disabled:opacity-60");
+
   return (
-    <section id="pricing" className={cn("py-24 bg-background", className)}>
-      <div className="max-w-7xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Pricing
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Choose a storage plan. Upload files, use the S3 API, connect external buckets, share links, or let AI agents save files to AgentBucket and recall them by meaning.
-          </p>
-        </motion.div>
+    <section id="pricing" aria-labelledby="pricing-heading" className={cn(container, "scroll-mt-20 pt-24 md:pt-32", className)}>
+      <SectionHead id="pricing-heading" label="Pricing" title="Start with 5 GB free" as={asPage ? "h1" : "h2"}>
+        <p>
+          Every plan includes the drive, the S3 API, your own buckets and AgentBucket. Paid plans add memory search, teams
+          and more room.
+        </p>
+      </SectionHead>
 
-        {/* Billing Toggle */}
-        <div className="flex justify-center mb-10">
-          <div className="flex items-center gap-3">
-            <span className={cn("text-sm font-medium", !isAnnual && "text-foreground", isAnnual && "text-muted-foreground")}>
-              Monthly
-            </span>
-            <Switch
-              checked={isAnnual}
-              onCheckedChange={setIsAnnual}
-              aria-label="Toggle annual billing"
-            />
-            <span className={cn("text-sm font-medium", isAnnual && "text-foreground", !isAnnual && "text-muted-foreground")}>
-              Annual <span className="text-green-500 text-xs">Save ~20%</span>
-            </span>
-          </div>
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 items-stretch">
-          {plans.map((plan) => (
-            <Card
-              key={plan.name}
+      <div className="mt-10 flex md:mt-14">
+        <div role="radiogroup" aria-label="Billing period" className="inline-flex rounded-[4px] bg-[var(--paper-2)] p-1 text-[13px]">
+          {[
+            { annual: false, label: "Monthly" },
+            { annual: true, label: "Annual" },
+          ].map((o) => (
+            <button
+              key={o.label}
+              type="button"
+              role="radio"
+              aria-checked={isAnnual === o.annual}
+              onClick={() => setIsAnnual(o.annual)}
               className={cn(
-                "flex flex-col h-full",
-                plan.highlighted && "outline-primary origin-top outline-4"
+                "rounded-[3px] px-3.5 py-1.5 transition-colors",
+                isAnnual === o.annual ? "bg-[var(--paper-card)] text-[var(--ink)] shadow-sm ring-1 ring-[var(--line)]" : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
               )}
             >
-              <CardContent className="flex flex-col gap-7 px-6 py-5 flex-1">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-foreground font-semibold">{plan.name}</h3>
-                    {plan.highlighted && (
-                      <span className="text-[10px] font-semibold uppercase tracking-wide bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
-                        Popular
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-1">
-                    <div className="text-foreground text-2xl font-bold overflow-hidden">
-                      <AnimatedPrice
-                        price={isAnnual ? plan.yearlyPrice : plan.monthlyPrice}
-                        suffix={plan.id !== "free" ? "/month" : undefined}
-                      />
-                    </div>
-                    {isAnnual && plan.id !== "free" && (
-                      <div className="text-xs text-muted-foreground">
-                        billed annually
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    {plan.description}
-                  </p>
-                </div>
-
-                <div className="space-y-3 flex-1">
-                  {plan.features.map((feature) => (
-                    <div
-                      key={feature}
-                      className="text-muted-foreground flex items-center gap-1.5"
-                    >
-                      <MdCheck className="size-5 shrink-0 text-primary" />
-                      <span className="text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {(() => {
-                  // Not signed in
-                  if (!isLoaded || !isSignedIn) {
-                    return (
-                      <Button
-                        asChild
-                        className="w-full mt-auto rounded"
-                        variant={plan.highlighted ? "default" : "outline"}
-                      >
-                        <Link href={plan.id === "free" ? "/sign-up" : "/sign-in"}>
-                          {plan.id === "free" ? "Get started" : "Sign in to upgrade"}
-                        </Link>
-                      </Button>
-                    );
-                  }
-
-                  // Signed in - loading plan
-                  if (loadingPlan) {
-                    return (
-                      <Button className="w-full mt-auto rounded" disabled variant="outline">
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Loading...
-                      </Button>
-                    );
-                  }
-
-                  const currentTier = PLAN_TIERS[userPlan || "free"] ?? 0;
-                  const planTier = PLAN_TIERS[plan.id] ?? 0;
-                  const isCurrentPlan = userPlan === plan.id;
-                  const isDowngrade = planTier < currentTier;
-
-                  // Current plan
-                  if (isCurrentPlan) {
-                    return (
-                      <Button
-                        className="w-full mt-auto rounded"
-                        variant={plan.highlighted ? "default" : "outline"}
-                        disabled
-                      >
-                        Current plan
-                      </Button>
-                    );
-                  }
-
-                  // Downgrade (including to Free) - go to billing portal
-                  if (isDowngrade) {
-                    return (
-                      <Button
-                        className="w-full mt-auto rounded"
-                        variant="outline"
-                        onClick={async () => {
-                          try {
-                            const res = await fetch("/api/polar/portal");
-                            if (res.ok) {
-                              const { url } = await res.json();
-                              window.open(url, "_blank");
-                            }
-                          } catch (err) {
-                            console.error("Portal error:", err);
-                          }
-                        }}
-                      >
-                        {plan.id === "free" ? "Go to dashboard" : `Downgrade to ${plan.name}`}
-                      </Button>
-                    );
-                  }
-
-                  // Upgrade button
-                  return (
-                    <Button
-                      className="w-full mt-auto rounded"
-                      onClick={() => handleUpgrade(plan.id)}
-                      disabled={isPending}
-                      variant={plan.highlighted ? "default" : "outline"}
-                    >
-                      {isPending ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Redirecting...
-                        </>
-                      ) : (
-                        `Upgrade to ${plan.name}`
-                      )}
-                    </Button>
-                  );
-                })()}
-              </CardContent>
-            </Card>
+              {o.label}
+              {o.annual && <span className="ml-1.5 font-mono text-[11px] text-[var(--violet)]">save ~20%</span>}
+            </button>
           ))}
         </div>
+      </div>
+
+      <div className="mt-6 grid gap-px overflow-hidden rounded-[12px] bg-[var(--line)] ring-1 ring-[var(--line)] md:grid-cols-2 lg:grid-cols-4">
+        {plans.map((plan) => (
+          <div
+            key={plan.name}
+            className={cn("relative flex flex-col bg-[var(--paper-card)] p-6 md:p-7", plan.highlighted && "bg-[var(--paper)]")}
+          >
+            {plan.highlighted && <span className="absolute inset-x-0 top-0 h-[3px] bg-[var(--violet)]" />}
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="text-[15px] font-medium">{plan.name}</h3>
+              {plan.highlighted && (
+                <span className="font-mono text-[10.5px] tracking-[0.12em] text-[var(--violet)] uppercase">Most popular</span>
+              )}
+            </div>
+            <div className="display mt-6 overflow-hidden text-[44px] leading-none tracking-[-0.04em]">
+              <AnimatedPrice
+                price={isAnnual ? plan.yearlyPrice : plan.monthlyPrice}
+                suffix={plan.id !== "free" ? " / month" : undefined}
+              />
+            </div>
+            <p className="mt-2 h-4 font-mono text-[11px] text-[var(--ink-soft)]">
+              {isAnnual && plan.id !== "free" ? "billed annually" : ""}
+            </p>
+            <p className="mt-4 text-[14px] text-[var(--ink-soft)]">{plan.description}</p>
+
+            <ul className="mt-6 mb-8 flex-1 space-y-2.5 border-t border-[var(--line)] pt-6">
+              {plan.features.map((feature) => (
+                <li key={feature} className="flex items-start gap-2.5 text-[13.5px]">
+                  <CheckTickCircleIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-[var(--violet)]" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            {(() => {
+              // Not signed in
+              if (!isLoaded || !isSignedIn) {
+                return (
+                  <Link href={plan.id === "free" ? "/sign-up" : "/sign-in"} className={actionClass(plan.highlighted)}>
+                    {plan.id === "free" ? "Create a free bucket" : "Sign in to upgrade"}
+                  </Link>
+                );
+              }
+
+              // Signed in - loading plan
+              if (loadingPlan) {
+                return (
+                  <button className={actionClass()} disabled>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Loading…
+                  </button>
+                );
+              }
+
+              const currentTier = PLAN_TIERS[userPlan || "free"] ?? 0;
+              const planTier = PLAN_TIERS[plan.id] ?? 0;
+              const isCurrentPlan = userPlan === plan.id;
+              const isDowngrade = planTier < currentTier;
+
+              // Current plan
+              if (isCurrentPlan) {
+                return (
+                  <button className={actionClass(plan.highlighted)} disabled>
+                    Current plan
+                  </button>
+                );
+              }
+
+              // Downgrade (including to Free) - go to billing portal
+              if (isDowngrade) {
+                return (
+                  <button
+                    className={actionClass()}
+                    onClick={async () => {
+                      try {
+                        const res = await fetch("/api/polar/portal");
+                        if (res.ok) {
+                          const { url } = await res.json();
+                          window.open(url, "_blank");
+                        }
+                      } catch (err) {
+                        console.error("Portal error:", err);
+                      }
+                    }}
+                  >
+                    {plan.id === "free" ? "Go to dashboard" : `Downgrade to ${plan.name}`}
+                  </button>
+                );
+              }
+
+              // Upgrade button
+              return (
+                <button className={actionClass(plan.highlighted)} onClick={() => handleUpgrade(plan.id)} disabled={isPending}>
+                  {isPending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Redirecting…
+                    </>
+                  ) : (
+                    `Upgrade to ${plan.name}`
+                  )}
+                </button>
+              );
+            })()}
+          </div>
+        ))}
       </div>
     </section>
   );

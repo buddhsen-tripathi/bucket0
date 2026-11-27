@@ -483,7 +483,7 @@ export default function S3ApiView({
         >
           https://s3.bucket0.com
           {copiedField === "endpoint" ? (
-            <MdOutlineCheck size={14} className="text-green-500" />
+            <MdOutlineCheck size={14} className="text-success" />
           ) : (
             <MdOutlineContentCopy size={14} className="text-muted-foreground" />
           )}
@@ -611,7 +611,7 @@ export default function S3ApiView({
               className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground border border-border rounded hover:bg-muted transition-colors"
             >
               {copiedField === "agentGuide" ? (
-                <><MdOutlineCheck size={14} className="text-green-500" /> Copied</>
+                <><MdOutlineCheck size={14} className="text-success" /> Copied</>
               ) : (
                 <><MdOutlineContentCopy size={14} /> Copy</>
               )}

@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Memory search is not available" }, { status: 503 });
     }
 
-    // Plan gate: memory is Pro+.
+    // Plan gate: memory is Starter and up.
     const [dbUser] = await db
       .select({ plan: users.plan })
       .from(users)
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     if (!dbUser || !getPlanLimits(dbUser.plan).memoryEnabled) {
       return NextResponse.json(
-        { error: "AgentBucket memory is available on the Pro and Scale plans." },
+        { error: "AgentBucket memory is available on the Starter, Pro and Scale plans." },
         { status: 402 }
       );
     }

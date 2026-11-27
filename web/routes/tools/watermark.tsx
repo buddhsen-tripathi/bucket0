@@ -32,23 +32,23 @@ const COLOR_OPTIONS: {
   {
     value: "red",
     label: "Red",
-    bgClass: "bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800",
-    activeClass: "ring-2 ring-red-400 dark:ring-red-500 border-red-400 dark:border-red-500",
-    dotClass: "bg-red-500",
+    bgClass: "bg-destructive/10 dark:bg-destructive/40 border-destructive/30 dark:border-destructive/30",
+    activeClass: "ring-2 ring-destructive/60 dark:ring-destructive border-destructive/60 dark:border-destructive",
+    dotClass: "bg-destructive",
   },
   {
     value: "blue",
     label: "Blue",
-    bgClass: "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800",
-    activeClass: "ring-2 ring-blue-400 dark:ring-blue-500 border-blue-400 dark:border-blue-500",
-    dotClass: "bg-blue-500",
+    bgClass: "bg-primary/10 dark:bg-primary/40 border-primary/30 dark:border-primary/30",
+    activeClass: "ring-2 ring-primary/60 dark:ring-primary border-primary/60 dark:border-primary",
+    dotClass: "bg-primary",
   },
   {
     value: "green",
     label: "Green",
-    bgClass: "bg-green-50 dark:bg-green-950/40 border-green-200 dark:border-green-800",
-    activeClass: "ring-2 ring-green-400 dark:ring-green-500 border-green-400 dark:border-green-500",
-    dotClass: "bg-green-500",
+    bgClass: "bg-success/10 dark:bg-success/40 border-success/30 dark:border-success/30",
+    activeClass: "ring-2 ring-success/60 dark:ring-success border-success/60 dark:border-success",
+    dotClass: "bg-success",
   },
 ];
 
@@ -455,7 +455,7 @@ export default function WatermarkPage() {
 
         {/* Success message */}
         {result && (
-          <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-700 dark:text-green-400 text-sm">
+          <div className="p-3 bg-success/10 border border-success/20 rounded-lg text-success dark:text-success text-sm">
             Watermark added successfully. Click &quot;Download&quot; to save
             your file.
           </div>

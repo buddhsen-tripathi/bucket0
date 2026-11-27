@@ -85,11 +85,11 @@ export default function TeamsLanding({ onGetStarted }: TeamsLandingProps) {
       {/* Limits */}
       <div className="flex flex-wrap gap-4 justify-center text-sm text-muted-foreground mb-6">
         <span className="flex items-center gap-1.5">
-          <Check className="w-4 h-4 text-green-500" />
+          <Check className="w-4 h-4 text-success" />
           End-to-end encryption
         </span>
         <span className="flex items-center gap-1.5">
-          <Check className="w-4 h-4 text-green-500" />
+          <Check className="w-4 h-4 text-success" />
           No extra cost for members
         </span>
       </div>

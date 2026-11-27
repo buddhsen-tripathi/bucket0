@@ -6,14 +6,14 @@ import { constructMetadata } from "@/lib/shared/seo";
 export default function TermsPage() {
     return (
         <main className="min-h-screen bg-background">
-            <section className="pt-28 lg:pt-36 pb-24">
+            <section className="pt-14 md:pt-24 pb-24">
                 <div className="max-w-3xl mx-auto px-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 tracking-tight">
+                        <h1 className="display text-[clamp(40px,5vw,64px)] leading-[1.02] text-foreground mb-4">
                             Terms of Service
                         </h1>
                         <p className="text-muted-foreground mb-12">

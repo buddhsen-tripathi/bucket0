@@ -895,7 +895,7 @@ export default function AnnotatePdfPage() {
 
         {result && (
           <div className="space-y-4">
-            <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-700 dark:text-green-400 text-sm flex items-center gap-2">
+            <div className="p-3 bg-success/10 border border-success/20 rounded-lg text-success dark:text-success text-sm flex items-center gap-2">
               <Check className="w-4 h-4 shrink-0" />
               Annotations applied successfully. Download your new PDF.
             </div>

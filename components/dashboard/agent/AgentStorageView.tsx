@@ -304,7 +304,7 @@ function Snippet({
           title="Copy"
         >
           {copiedField === field ? (
-            <MdOutlineCheck size={14} className="text-green-500" />
+            <MdOutlineCheck size={14} className="text-success" />
           ) : (
             <MdContentCopy size={14} />
           )}
@@ -459,7 +459,7 @@ export default function AgentStorageView() {
           <h1 className="text-2xl font-semibold text-foreground">
             AgentBucket
             {memoryEnabled && (
-              <span className="inline-block bg-gradient-to-r from-primary to-[#ffa6ba] bg-clip-text text-transparent font-bold drop-shadow-[0_0_8px_rgba(193,169,238,0.45)]">
+              <span className="font-bold text-primary">
                 +
               </span>
             )}
@@ -518,7 +518,7 @@ export default function AgentStorageView() {
               title="Copy"
             >
               {copiedField === "apiKey" ? (
-                <MdOutlineCheck size={16} className="text-green-500" />
+                <MdOutlineCheck size={16} className="text-success" />
               ) : (
                 <MdContentCopy size={16} />
               )}
@@ -726,7 +726,7 @@ export default function AgentStorageView() {
                 className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground border border-border rounded hover:bg-muted transition-colors"
               >
                 {copiedField === "agentGuide" ? (
-                  <><MdOutlineCheck size={14} className="text-green-500" /> Copied</>
+                  <><MdOutlineCheck size={14} className="text-success" /> Copied</>
                 ) : (
                   <><MdContentCopy size={14} /> Copy</>
                 )}

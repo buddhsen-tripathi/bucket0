@@ -38,8 +38,8 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
 
   const icon =
     toast.variant === "error" ? <AlertCircle size={18} className="text-destructive flex-shrink-0" /> :
-    toast.variant === "success" ? <CheckCircle size={18} className="text-green-500 flex-shrink-0" /> :
-    <Info size={18} className="text-blue-500 flex-shrink-0" />;
+    toast.variant === "success" ? <CheckCircle size={18} className="text-success flex-shrink-0" /> :
+    <Info size={18} className="text-primary flex-shrink-0" />;
 
   const borderColor =
     toast.variant === "error" ? "border-l-destructive" :

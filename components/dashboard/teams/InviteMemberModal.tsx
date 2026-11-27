@@ -296,8 +296,8 @@ export default function InviteMemberModal({
               {/* Success state - all invitations sent */}
               {successCount > 0 && failedCount === 0 && pendingCount === 0 && (
                 <div className="text-center py-4">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/10 mb-4">
-                    <CheckCircle className="w-8 h-8 text-emerald-500" />
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-success/10 mb-4">
+                    <CheckCircle className="w-8 h-8 text-success" />
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-1">
                     {successCount === 1 ? "Invitation Sent!" : "All Invitations Sent!"}
@@ -314,13 +314,13 @@ export default function InviteMemberModal({
               {(pendingCount > 0 || failedCount > 0) && (
                 <div className="flex items-center justify-center gap-4 p-3 bg-muted/50 rounded-lg">
                   {successCount > 0 && (
-                    <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                    <div className="flex items-center gap-1.5 text-success dark:text-success">
                       <CheckCircle size={16} />
                       <span className="text-sm font-medium">{successCount} sent</span>
                     </div>
                   )}
                   {pendingCount > 0 && (
-                    <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400">
+                    <div className="flex items-center gap-1.5 text-warning dark:text-warning">
                       <AlertCircle size={16} />
                       <span className="text-sm font-medium">{pendingCount} pending</span>
                     </div>
@@ -341,18 +341,18 @@ export default function InviteMemberModal({
                     key={result.email}
                     className={`p-3 rounded-lg border ${
                       result.success
-                        ? "bg-emerald-500/5 border-emerald-500/20"
+                        ? "bg-success/5 border-success/20"
                         : result.isPending
-                        ? "bg-amber-500/5 border-amber-500/20"
+                        ? "bg-warning/5 border-warning/20"
                         : "bg-destructive/5 border-destructive/20"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0">
                         {result.success ? (
-                          <CheckCircle size={16} className="text-emerald-500 flex-shrink-0" />
+                          <CheckCircle size={16} className="text-success flex-shrink-0" />
                         ) : result.isPending ? (
-                          <AlertCircle size={16} className="text-amber-500 flex-shrink-0" />
+                          <AlertCircle size={16} className="text-warning flex-shrink-0" />
                         ) : (
                           <XCircle size={16} className="text-destructive flex-shrink-0" />
                         )}
@@ -382,7 +382,7 @@ export default function InviteMemberModal({
                     )}
                     {result.isPending && (
                       <div className="mt-1 ml-6 space-y-0.5">
-                        <p className="text-xs text-amber-600 dark:text-amber-400">
+                        <p className="text-xs text-warning dark:text-warning">
                           Already has a pending invitation
                         </p>
                         <p className="text-xs text-muted-foreground">
@@ -451,7 +451,7 @@ export default function InviteMemberModal({
                         {parsedEmails.valid.map((email) => (
                           <span
                             key={email}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs rounded-full"
+                            className="inline-flex items-center gap-1 px-2 py-0.5 bg-success/10 text-success dark:text-success text-xs rounded-full"
                           >
                             <Check size={10} />
                             {email}

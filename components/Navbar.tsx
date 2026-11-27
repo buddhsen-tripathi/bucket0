@@ -9,17 +9,14 @@ import { ThemeToggle } from "./ThemeToggle";
 import { Logo } from "./Logo";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/shared/utils";
-import { useTheme } from "@/components/ThemeProvider";
+import { button, container, GITHUB_URL } from "@/components/site/styles";
+import { GithubStars } from "@/components/site/GithubStars";
+import { BurgerMenuThreeIcon, GithubIcon, LogOutRightIcon, MultipleCrossCancelIcon, UserIcon } from "@/components/icons";
 
-export default function NavBar({
-  promoBannerVisible = false,
-}: {
-  promoBannerVisible?: boolean;
-}) {
+export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { resolvedTheme } = useTheme();
   const { user } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
@@ -27,7 +24,7 @@ export default function NavBar({
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 8);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -59,65 +56,58 @@ export default function NavBar({
     }
   };
 
+  const links = [
+    { name: "Features", href: "/#features" },
+    { name: "Tools", href: "/tools" },
+    { name: "Docs", href: "/docs" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "App", href: "/app" },
+  ];
+
   return (
     <header
       className={cn(
-        "fixed left-0 right-0 z-50 mx-auto max-w-4xl transition-all duration-300",
-        promoBannerVisible ? "top-14" : "top-4",
-        scrolled ? "px-4" : "px-4 md:px-0"
+        "sticky top-0 z-50 border-b bg-[var(--paper)]/85 backdrop-blur-md transition-colors duration-300",
+        scrolled ? "border-[var(--line)]" : "border-transparent"
       )}
     >
-      <div
-        className={cn(
-          "flex h-14 items-center justify-between rounded-full border px-4 md:px-6 backdrop-blur-md transition-all duration-300",
-          scrolled
-            ? "border-black/20 bg-white/70 shadow-lg shadow-black/5 dark:border-white/20 dark:bg-white/10 dark:shadow-black/20"
-            : "border-black/5 bg-white/50 dark:border-white/5 dark:bg-white/5"
-        )}
-      >
-        {/* Logo */}
-        <Link href="/" className="flex items-center">
+      <div className={cn(container, "flex h-16 items-center gap-6 lg:gap-10")}>
+        <Link href="/" className="flex items-center gap-2.5" aria-label="Bucket0 home">
           <Logo size={24} />
+          <span className="text-[17px] font-semibold tracking-[-0.03em]">Bucket0</span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1">
-          {[
-            { name: "Features", href: "/#features" },
-            { name: "Tools", href: "/tools" },
-            {name: "Docs", href: "/docs"},
-            { name: "Pricing", href: "/pricing" },
-            { name: "App", href: "/app" },
-          ].map((item) => (
+        <nav className="hidden md:flex items-center gap-5 lg:gap-7">
+          {links.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               onClick={item.href.includes("#") ? (e) => handleSmoothScroll(e, item.href) : undefined}
-              className="px-4 py-1.5 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors rounded-full hover:bg-foreground/10"
+              className={cn(
+                "text-[14px] transition-colors hover:text-[var(--ink)]",
+                pathname === item.href ? "text-[var(--ink)]" : "text-[var(--ink-soft)]"
+              )}
             >
               {item.name}
             </Link>
           ))}
         </nav>
 
-        {/* Right side actions */}
-        <div className="flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-1.5">
+          <GithubStars className="hidden sm:inline-flex" />
           <ThemeToggle />
 
           <SignedOut>
-            <Link
-              href="/sign-in"
-              className="hidden md:inline-flex items-center justify-center rounded-full bg-primary px-5 py-1.5 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:bg-primary/90 hover:shadow-lg"
-            >
-              Sign In
+            <Link href="/sign-in" className={cn(button.solid, "ml-1.5 hidden md:inline-flex whitespace-nowrap px-3.5 py-2 text-[13.5px]")}>
+              Sign in
             </Link>
           </SignedOut>
 
           <SignedIn>
-            <div className="relative">
+            <div className="relative ml-1.5">
               <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors overflow-hidden"
+                className="w-8 h-8 rounded-full bg-[var(--paper-2)] flex items-center justify-center ring-1 ring-[var(--line)] transition-colors overflow-hidden"
                 title="Profile menu"
               >
                 {user?.imageUrl ? (
@@ -129,33 +119,27 @@ export default function NavBar({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-primary font-semibold text-sm">
+                  <span className="font-semibold text-sm">
                     {user?.firstName?.[0] || user?.emailAddresses[0]?.emailAddress[0] || "U"}
                   </span>
                 )}
               </button>
 
-              {/* Profile Dropdown */}
               {showProfileMenu && (
                 <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setShowProfileMenu(false)}
-                  />
-                  <div className="absolute right-0 top-12 w-48 bg-card border border-border rounded shadow-xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-100">
+                  <div className="fixed inset-0 z-40" onClick={() => setShowProfileMenu(false)} />
+                  <div className="absolute right-0 top-11 w-48 bg-[var(--paper-card)] border border-[var(--line)] rounded-[6px] shadow-xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-100">
                     <button
                       onClick={() => {
-                        router.push('/dashboard?view=profile');
+                        router.push("/dashboard?view=profile");
                         setShowProfileMenu(false);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors text-left"
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-[var(--paper-2)] transition-colors text-left"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
+                      <UserIcon aria-hidden className="size-4" />
                       View profile
                     </button>
-                    <div className="border-t border-border" />
+                    <div className="border-t border-[var(--line)]" />
                     <button
                       onClick={() => {
                         signOut();
@@ -163,9 +147,7 @@ export default function NavBar({
                       }}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/10 transition-colors text-left"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
+                      <LogOutRightIcon aria-hidden className="size-4" />
                       Log out
                     </button>
                   </div>
@@ -174,54 +156,32 @@ export default function NavBar({
             </div>
           </SignedIn>
 
-          {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="md:hidden p-2 text-[var(--ink-soft)] hover:text-[var(--ink)] transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d={
-                  isMenuOpen
-                    ? "M6 18L18 6M6 6l12 12"
-                    : "M4 6h16M4 12h16M4 18h16"
-                }
-              />
-            </svg>
+            {isMenuOpen ? <MultipleCrossCancelIcon aria-hidden className="size-5" /> : <BurgerMenuThreeIcon aria-hidden className="size-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-16 left-4 right-4 rounded-sm border border-border/50 bg-background/95 backdrop-blur-xl p-4 shadow-2xl"
+            className="md:hidden overflow-hidden border-t border-[var(--line)] bg-[var(--paper)]"
           >
-            <nav className="flex flex-col space-y-2">
-              {[
-                { name: "Features", href: "/#features" },
-                { name: "Tools", href: "/tools" },
-                { name: "Pricing", href: "/#pricing" },
-                { name: "App", href: "/app" },
-              ].map((item) => (
+            <nav className={cn(container, "flex flex-col py-3")}>
+              {links.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-sm transition-colors"
+                  className="border-b border-[var(--line)] py-3.5 text-[16px] last:border-b-0"
                   onClick={(e) => {
                     if (item.href.includes("#")) {
                       handleSmoothScroll(e, item.href);
@@ -232,13 +192,18 @@ export default function NavBar({
                   {item.name}
                 </Link>
               ))}
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 py-3.5 text-[16px]"
+              >
+                <GithubIcon aria-hidden className="size-4" />
+                GitHub
+              </a>
               <SignedOut>
-                <Link
-                  href="/sign-in"
-                  className="mt-2 w-full inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
-                  onClick={closeMenu}
-                >
-                  Sign In
+                <Link href="/sign-in" className={cn(button.solid, "mt-2 w-full")} onClick={closeMenu}>
+                  Sign in
                 </Link>
               </SignedOut>
             </nav>

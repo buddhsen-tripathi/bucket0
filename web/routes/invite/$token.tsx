@@ -93,8 +93,8 @@ export default function AcceptInvitationPage() {
 
           {status === "success" && (
             <>
-              <div className="bg-emerald-500/10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center">
-                <CheckCircle className="w-8 h-8 text-emerald-500" />
+              <div className="bg-success/10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                <CheckCircle className="w-8 h-8 text-success" />
               </div>
               <h1 className="text-xl font-semibold text-foreground mb-2">
                 Welcome to {teamName || "the team"}!

@@ -1,7 +1,6 @@
 import HeroSection from "@/components/home-page/HeroSection";
-import CloudFeatures from "@/components/home-page/CloudFeatures";
-import AgentBucketShowcase from "@/components/home-page/AgentBucketShowcase";
-import TeamsShowcase from "@/components/home-page/TeamsShowcase";
+import { AgentFeatures, McpSection } from "@/components/home-page/AgentSections";
+import { ClosingCta, DriveSection, OpenSourceSection, ToolsSection } from "@/components/home-page/DriveSections";
 import { Pricing } from "@/components/home-page/Pricing";
 import FAQ from "@/components/home-page/FAQ";
 import WebMcpProvider from "@/components/home-page/WebMcpProvider";
@@ -19,17 +18,20 @@ export default function Home() {
       <WebMcpProvider />
       <JsonLd type="faq" faqs={allFaqs} />
       <HeroSection />
-      <AgentBucketShowcase />
-      <CloudFeatures />
-      <TeamsShowcase />
+      <AgentFeatures />
+      <McpSection />
+      <DriveSection />
+      <ToolsSection />
+      <OpenSourceSection />
       <Pricing />
       <FAQ />
+      <ClosingCta />
     </main>
   );
 }
 
 export const meta = () => nextMeta(constructMetadata({
-  title: "Bucket0 | Cloud Storage with AgentBucket for AI Agents",
+  title: "Bucket0 | A file system for AI agents, and an encrypted drive for you",
   description:
-    "Encrypted cloud storage with file uploads, S3-compatible API, AgentBucket for AI agents, external buckets, and teams on paid plans. Start free with 5 GB.",
+    "AgentBucket gives AI agents files they can find again by meaning. Connect over MCP or the REST API, with an encrypted drive and S3 API included. Start free with 5 GB.",
 }));

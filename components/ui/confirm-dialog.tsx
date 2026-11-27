@@ -55,8 +55,8 @@ export default function ConfirmDialog({
       button: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
     },
     warning: {
-      icon: "bg-amber-500/10 text-amber-500",
-      button: "bg-amber-500 text-white hover:bg-amber-600",
+      icon: "bg-warning/10 text-warning",
+      button: "bg-warning text-white hover:bg-warning",
     },
     default: {
       icon: "bg-primary/10 text-primary",

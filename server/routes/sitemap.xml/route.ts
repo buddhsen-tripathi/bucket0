@@ -14,6 +14,12 @@ function sitemap(): Sitemap {
       priority: 1,
     },
     {
+      url: `${baseUrl}/agentbucket`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/pricing`,
       lastModified: new Date(),
       changeFrequency: "weekly",

@@ -241,12 +241,12 @@ export default function S3Config({
 
           {/* Success Message */}
           {connectionStatus === "success" && (
-            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4">
+            <div className="bg-success/10 border border-success/20 rounded-2xl p-4">
               <div className="flex items-start gap-3">
-                <CheckCircle className="text-emerald-500 mt-0.5 flex-shrink-0" size={20} />
+                <CheckCircle className="text-success mt-0.5 flex-shrink-0" size={20} />
                 <div>
-                  <p className="font-semibold text-emerald-700 dark:text-emerald-400">Success</p>
-                  <p className="text-sm text-emerald-600 dark:text-emerald-400/80 mt-1">Connection successful!</p>
+                  <p className="font-semibold text-success dark:text-success">Success</p>
+                  <p className="text-sm text-success dark:text-success/80 mt-1">Connection successful!</p>
                 </div>
               </div>
             </div>

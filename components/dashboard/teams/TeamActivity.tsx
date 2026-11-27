@@ -53,14 +53,14 @@ const ACTION_ICONS: Record<string, React.ReactNode> = {
 };
 
 const ACTION_COLORS: Record<string, string> = {
-  "file.upload": "text-emerald-500 bg-emerald-500/10",
-  "file.download": "text-blue-500 bg-blue-500/10",
-  "file.delete": "text-red-500 bg-red-500/10",
-  "file.share": "text-purple-500 bg-purple-500/10",
-  "member.join": "text-emerald-500 bg-emerald-500/10",
-  "member.leave": "text-amber-500 bg-amber-500/10",
-  "member.invite": "text-blue-500 bg-blue-500/10",
-  "member.remove": "text-red-500 bg-red-500/10",
+  "file.upload": "text-success bg-success/10",
+  "file.download": "text-primary bg-primary/10",
+  "file.delete": "text-destructive bg-destructive/10",
+  "file.share": "text-primary bg-primary/10",
+  "member.join": "text-success bg-success/10",
+  "member.leave": "text-warning bg-warning/10",
+  "member.invite": "text-primary bg-primary/10",
+  "member.remove": "text-destructive bg-destructive/10",
   default: "text-muted-foreground bg-muted",
 };
 

@@ -50,7 +50,7 @@ export function CredentialsModal({
               className="p-1.5 text-muted-foreground hover:text-foreground"
             >
               {copiedField === "modal-endpoint" ? (
-                <MdOutlineCheck size={16} className="text-green-500" />
+                <MdOutlineCheck size={16} className="text-success" />
               ) : (
                 <MdOutlineContentCopy size={16} />
               )}
@@ -72,7 +72,7 @@ export function CredentialsModal({
                       className="p-1 text-muted-foreground hover:text-foreground"
                     >
                       {copiedField === `modal-key-${cred.id}` ? (
-                        <MdOutlineCheck size={12} className="text-green-500" />
+                        <MdOutlineCheck size={12} className="text-success" />
                       ) : (
                         <MdOutlineContentCopy size={12} />
                       )}

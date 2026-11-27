@@ -178,7 +178,7 @@ export default function CompressImagePage() {
                   </button>
                 </div>
                 {file && mayHaveTransparency(file.name) && outputFormat === "jpeg" && (
-                  <p className="text-xs text-amber-600 dark:text-amber-400">
+                  <p className="text-xs text-warning dark:text-warning">
                     This image may have transparency. JPEG does not support transparency — transparent areas will appear black. Use WebP to preserve it.
                   </p>
                 )}
@@ -222,8 +222,8 @@ export default function CompressImagePage() {
                     <span
                       className={`text-sm font-medium ${
                         savings > 0
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-amber-600 dark:text-amber-400"
+                          ? "text-success dark:text-success"
+                          : "text-warning dark:text-warning"
                       }`}
                     >
                       {savings > 0 ? `${savings}% smaller` : `${Math.abs(savings)}% larger`}
@@ -272,7 +272,7 @@ export default function CompressImagePage() {
         </div>
 
         {result && (
-          <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-700 dark:text-green-400 text-sm">
+          <div className="p-3 bg-success/10 border border-success/20 rounded-lg text-success dark:text-success text-sm">
             Image compressed successfully ({formatFileSize(result.size)}).
             Click &quot;Download&quot; to save.
           </div>

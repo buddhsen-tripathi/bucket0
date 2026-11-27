@@ -27,6 +27,7 @@ const TOOLS = [
 
 export default [
   index("routes/home.tsx"),
+  route("agentbucket", "routes/agentbucket.tsx"),
   route("app", "routes/app.tsx"),
   route("account-deletion", "routes/account-deletion.tsx"),
   route("changelog", "routes/changelog.tsx"),

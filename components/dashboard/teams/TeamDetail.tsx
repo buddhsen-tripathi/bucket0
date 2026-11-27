@@ -387,7 +387,7 @@ export default function TeamDetail({
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-xl sm:text-2xl font-bold text-foreground truncate">{team.name}</h1>
               {team.isOwner && (
-                <span className="flex items-center gap-1 text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full flex-shrink-0">
+                <span className="flex items-center gap-1 text-xs bg-warning/10 text-warning dark:text-warning px-2 py-0.5 rounded-full flex-shrink-0">
                   <Crown size={12} />
                   Owner
                 </span>
@@ -611,7 +611,7 @@ export default function TeamDetail({
                                 quota.storageUsed / quota.storageLimit > 0.9
                                   ? "bg-destructive"
                                   : quota.storageUsed / quota.storageLimit > 0.75
-                                  ? "bg-amber-500"
+                                  ? "bg-warning"
                                   : "bg-primary"
                               }`}
                               style={{ width: `${Math.min(100, (quota.storageUsed / quota.storageLimit) * 100)}%` }}
@@ -643,7 +643,7 @@ export default function TeamDetail({
                   <div className="border border-border rounded-lg h-fit">
                     <div className="p-4 border-b border-border bg-muted/30">
                       <h3 className="font-semibold text-foreground flex items-center gap-2">
-                        <ArrowRightLeft size={18} className="text-amber-500" />
+                        <ArrowRightLeft size={18} className="text-warning" />
                         Transfer Ownership
                       </h3>
                       <p className="text-sm text-muted-foreground mt-1">

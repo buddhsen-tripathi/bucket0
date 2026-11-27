@@ -12,7 +12,7 @@ Bucket0 AgentBucket is encrypted object storage designed for AI agents.
 - Persist agent outputs, artifacts, transcripts, or datasets
 - Download or list previously uploaded agent files
 - Create public share/stream links for media
-- Semantic memory search over agent files (Pro+)
+- Semantic memory search over agent files (Starter and up)
 
 ## Auth
 

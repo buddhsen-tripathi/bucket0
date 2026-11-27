@@ -32,16 +32,16 @@ export default function ConditionalLayout({
     setShowPromo(false);
   };
 
+  if (hideNavFooter) return <>{children}</>;
+
   return (
-    <>
+    <div className="site min-h-screen">
       <AnimatePresence>
-        {!hideNavFooter && showPromo && (
-          <PromoBanner onDismiss={dismissPromo} />
-        )}
+        {showPromo && <PromoBanner onDismiss={dismissPromo} />}
       </AnimatePresence>
-      {!hideNavFooter && <NavBar promoBannerVisible={showPromo} />}
+      <NavBar />
       {children}
-      {!hideNavFooter && <Footer />}
-    </>
+      <Footer />
+    </div>
   );
 }

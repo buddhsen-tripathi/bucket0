@@ -7,7 +7,7 @@ import { constructMetadata } from "@/lib/shared/seo";
 export default function ChangelogPage() {
   return (
     <main className="min-h-screen bg-background">
-      <section className="pt-24 md:pt-32 pb-24">
+      <section className="pt-14 md:pt-24 pb-24">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -15,7 +15,7 @@ export default function ChangelogPage() {
             transition={{ duration: 0.5 }}
             className="mb-16"
           >
-            <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4 tracking-tight">
+            <h1 className="display text-[clamp(40px,5vw,64px)] leading-[1.02] text-foreground mb-4">
               Changelog
             </h1>
             <p className="text-lg text-muted-foreground">

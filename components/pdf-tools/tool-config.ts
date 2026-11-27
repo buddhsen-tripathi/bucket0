@@ -190,7 +190,7 @@ export const IMAGE_TOOLS: PdfTool[] = [
     name: "Convert Image",
     slug: "convert-image",
     description:
-      "Convert images between formats — PNG, JPG, WebP, AVIF, and BMP.",
+      "Convert images between PNG, JPG, WebP, AVIF and BMP.",
     icon: RefreshCw,
     category: "image",
     colorClass: "text-primary",

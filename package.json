@@ -23,6 +23,8 @@
     "@clerk/backend": "^3.25.0",
     "@clerk/react-router": "^3.6.35",
     "@cloudflare/containers": "0.3.7",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
     "@heroicons/react": "^2.2.0",
     "@neondatabase/serverless": "^1.1.0",
     "@polar-sh/sdk": "^0.42.5",

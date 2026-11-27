@@ -43,20 +43,20 @@ const STRENGTH_CONFIG: Record<
 > = {
   weak: {
     label: "Weak",
-    colorClass: "text-red-600 dark:text-red-400",
-    barClass: "bg-red-500",
+    colorClass: "text-destructive dark:text-destructive",
+    barClass: "bg-destructive",
     width: "w-1/3",
   },
   medium: {
     label: "Medium",
-    colorClass: "text-yellow-600 dark:text-yellow-400",
-    barClass: "bg-yellow-500",
+    colorClass: "text-warning dark:text-warning",
+    barClass: "bg-warning",
     width: "w-2/3",
   },
   strong: {
     label: "Strong",
-    colorClass: "text-green-600 dark:text-green-400",
-    barClass: "bg-green-500",
+    colorClass: "text-success dark:text-success",
+    barClass: "bg-success",
     width: "w-full",
   },
 };
@@ -226,9 +226,9 @@ export default function ProtectPdfPage() {
         {file && !result && (
           <div className="space-y-6">
             {/* Info banner */}
-            <div className="flex gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-              <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-              <p className="text-sm text-amber-800 dark:text-amber-200">
+            <div className="flex gap-3 p-4 bg-warning/10 dark:bg-warning/20 border border-warning/30 dark:border-warning/30 rounded-lg">
+              <Info className="w-5 h-5 text-warning shrink-0 mt-0.5" />
+              <p className="text-sm text-warning dark:text-warning">
                 PDF password protection requires native encryption support.
                 This tool currently re-saves your PDF with updated metadata and
                 permission markers. Full encryption support is coming soon.
@@ -329,7 +329,7 @@ export default function ProtectPdfPage() {
                       "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary",
                       "transition-colors",
                       confirmPassword.length > 0 && !passwordsMatch
-                        ? "border-red-400 dark:border-red-600"
+                        ? "border-destructive/60 dark:border-destructive"
                         : "border-border"
                     )}
                   />
@@ -349,12 +349,12 @@ export default function ProtectPdfPage() {
                   </button>
                 </div>
                 {confirmPassword.length > 0 && !passwordsMatch && (
-                  <p className="text-xs text-red-600 dark:text-red-400">
+                  <p className="text-xs text-destructive dark:text-destructive">
                     Passwords do not match
                   </p>
                 )}
                 {confirmPassword.length > 0 && passwordsMatch && (
-                  <p className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+                  <p className="text-xs text-success dark:text-success flex items-center gap-1">
                     <Check className="w-3 h-3" />
                     Passwords match
                   </p>
@@ -479,9 +479,9 @@ export default function ProtectPdfPage() {
             </div>
 
             {/* Reminder banner in result state */}
-            <div className="flex gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-              <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-              <p className="text-sm text-amber-800 dark:text-amber-200">
+            <div className="flex gap-3 p-4 bg-warning/10 dark:bg-warning/20 border border-warning/30 dark:border-warning/30 rounded-lg">
+              <Info className="w-5 h-5 text-warning shrink-0 mt-0.5" />
+              <p className="text-sm text-warning dark:text-warning">
                 This PDF has been re-saved with Bucket0 metadata. For strong
                 password encryption, consider using a desktop PDF application
                 such as Adobe Acrobat or LibreOffice.

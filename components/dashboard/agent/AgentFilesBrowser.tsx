@@ -366,7 +366,7 @@ export default function AgentFilesBrowser({ refreshTrigger = 0 }: { refreshTrigg
   return (
     <>
       {moveResult && (
-        <div className="mb-3 px-4 py-2.5 bg-green-500/10 text-green-600 dark:text-green-400 rounded text-sm">
+        <div className="mb-3 px-4 py-2.5 bg-success/10 text-success dark:text-success rounded text-sm">
           {moveResult}
         </div>
       )}

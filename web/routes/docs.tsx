@@ -1,18 +1,9 @@
-
-import { useState, useEffect, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
-import {
-  BookOpen,
-  Zap,
-  ChevronRight,
-  Copy,
-  Check,
-  Shield,
-  Code,
-  Search,
-  X,
-} from "lucide-react";
-import { MdOutlineApi, MdOutlineSmartToy } from "react-icons/md";
+import { useState } from "react";
+import { DocsLayout, type NavGroup } from "@/components/docs/DocsLayout";
+import { CodeBlock, CodeGroup } from "@/components/docs/CodeBlock";
+import { Bullets, Callout, Code, Definitions, DocSection, Endpoints, H3, H4, P, Steps } from "@/components/docs/parts";
+import { LockCloseIcon } from "@/components/icons";
+import { GITHUB_URL, textLink } from "@/components/site/styles";
 import { nextMeta } from "@/web/compat/meta";
 import { constructMetadata } from "@/lib/shared/seo";
 
@@ -231,6 +222,147 @@ async fn download_agent_file(api_key: &str, key: &str) -> Result<Vec<u8>, Box<dy
 
     let bytes = response.bytes().await?;
     Ok(bytes.to_vec())
+}`,
+  },
+  agentMemorySearch: {
+    JavaScript: `const apiKey = 'b0ak_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+
+const response = await fetch('https://bucket0.com/api/agent-bucket/memory/search', {
+  method: 'POST',
+  headers: {
+    'Authorization': \`Bearer \${apiKey}\`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ query: 'pricing feedback from the Acme call', topK: 5 }),
+});
+
+const { results } = await response.json();
+// [{ fileName: "acme.md", key: "calls/acme.md", chunkIndex: 2, snippet: "...", score: 0.82 }]`,
+    Python: `import requests
+
+api_key = "b0ak_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+response = requests.post(
+    'https://bucket0.com/api/agent-bucket/memory/search',
+    json={'query': 'pricing feedback from the Acme call', 'topK': 5},
+    headers={'Authorization': f'Bearer {api_key}'}
+)
+
+for r in response.json()['results']:
+    print(f"{r['key']} ({r['score']:.2f}): {r['snippet']}")`,
+    Go: `package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func searchMemory(apiKey, query string) error {
+    payload, _ := json.Marshal(map[string]interface{}{"query": query, "topK": 5})
+    req, _ := http.NewRequest("POST",
+        "https://bucket0.com/api/agent-bucket/memory/search", bytes.NewReader(payload))
+    req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", apiKey))
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return err
+    }
+    defer resp.Body.Close()
+
+    var result map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&result)
+    fmt.Printf("Results: %v\\n", result["results"])
+    return nil
+}`,
+    Rust: `use reqwest::Client;
+use serde_json::json;
+
+async fn search_memory(api_key: &str, query: &str) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
+    let client = Client::new();
+    let response = client
+        .post("https://bucket0.com/api/agent-bucket/memory/search")
+        .header("Authorization", format!("Bearer {}", api_key))
+        .json(&json!({ "query": query, "topK": 5 }))
+        .send()
+        .await?;
+
+    let result = response.json::<serde_json::Value>().await?;
+    Ok(result)
+}`,
+  },
+  agentShare: {
+    JavaScript: `const apiKey = 'b0ak_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+
+const response = await fetch('https://bucket0.com/api/agent-bucket/files/share', {
+  method: 'POST',
+  headers: {
+    'Authorization': \`Bearer \${apiKey}\`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ key: 'videos/demo.mp4', allowDownload: false }),
+});
+
+const { shareUrl, streamUrl } = await response.json();
+// shareUrl: "https://bucket0.com/s/<linkId>"
+// streamUrl: "https://bucket0.com/api/cloud/share/stream?id=<linkId>"`,
+    Python: `import requests
+
+api_key = "b0ak_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+response = requests.post(
+    'https://bucket0.com/api/agent-bucket/files/share',
+    json={'key': 'videos/demo.mp4', 'allowDownload': False},
+    headers={'Authorization': f'Bearer {api_key}'}
+)
+
+data = response.json()
+print(data['shareUrl'], data['streamUrl'])`,
+    Go: `package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+)
+
+func shareAgentFile(apiKey, key string) error {
+    payload, _ := json.Marshal(map[string]interface{}{"key": key, "allowDownload": false})
+    req, _ := http.NewRequest("POST",
+        "https://bucket0.com/api/agent-bucket/files/share", bytes.NewReader(payload))
+    req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", apiKey))
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return err
+    }
+    defer resp.Body.Close()
+
+    var result map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&result)
+    fmt.Printf("Share: %s\\nStream: %s\\n", result["shareUrl"], result["streamUrl"])
+    return nil
+}`,
+    Rust: `use reqwest::Client;
+use serde_json::json;
+
+async fn share_agent_file(api_key: &str, key: &str) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
+    let client = Client::new();
+    let response = client
+        .post("https://bucket0.com/api/agent-bucket/files/share")
+        .header("Authorization", format!("Bearer {}", api_key))
+        .json(&json!({ "key": key, "allowDownload": false }))
+        .send()
+        .await?;
+
+    let result = response.json::<serde_json::Value>().await?;
+    Ok(result)
 }`,
   },
   s3ListBuckets: {
@@ -460,8 +592,9 @@ const sectionMarkdown: Record<string, string> = {
 
 Bucket0 exposes two developer APIs:
 
-- **AgentBucket API** — Bearer token auth (\`b0ak_\` prefix). Upload, download, list, delete files, and create folders. Designed for AI agents.
-- **S3-Compatible API** — AWS Signature V4 auth. Works with AWS CLI, boto3, aws-sdk, Cyberduck, rclone, etc.
+- **AgentBucket API**: Bearer token auth (\`b0ak_\` prefix). Upload, download, list, delete files, create folders, create share links, and search file contents by meaning. Designed for AI agents.
+- **MCP server**: \`https://mcp.bucket0.com/mcp\`. Connect Claude, ChatGPT, Cursor or another MCP client and sign in with your Bucket0 account. No key to paste.
+- **S3-Compatible API**: AWS Signature V4 auth. Works with AWS CLI, boto3, aws-sdk, Cyberduck, rclone, etc.
 
 `,
 
@@ -507,11 +640,15 @@ Auth: \`Authorization: Bearer b0ak_...\`
 | GET | /files/download?key=path | Download file |
 | DELETE | /files?key=path | Delete file |
 | POST | /files/folder | Create folder |
+| POST | /files/share | Create a share link for an Agent Storage file |
+| POST | /memory/search | Search indexed file contents by meaning (Starter and up) |
 
 ### Upload Response
 \`\`\`json
 { "success": true, "key": "research/results.json", "fileName": "results.json", "size": 2048, "destination": "agent" }
 \`\`\`
+
+Optional form field \`index\`: send \`false\` to skip memory indexing for this file.
 
 ### List Response
 \`\`\`json
@@ -527,14 +664,93 @@ POST /files/folder { "path": "reports/daily" }
 → { "success": true, "path": "reports/daily/" }
 \`\`\`
 
+### Memory Search
+Available on Starter, Pro and Scale. Text files up to 1 MB are indexed after upload (text/*, JSON, XML, YAML, CSV, JavaScript, TypeScript, and common code and config extensions). PDFs and other binary files are not indexed. Content is split into 1,000-character chunks with 100 characters of overlap and stored encrypted. Uploading to the same key replaces its chunks.
+
+| Plan | Indexed chunks |
+|------|----------------|
+| Free | Not included |
+| Starter | 10,000 |
+| Pro | 50,000 |
+| Scale | 200,000 |
+
+When the chunk limit is reached, further text is not indexed.
+
+\`\`\`json
+POST /memory/search { "query": "pricing feedback from the Acme call", "topK": 5 }
+→ { "results": [{ "fileName": "acme.md", "key": "calls/acme.md", "chunkIndex": 2, "snippet": "...", "score": 0.82 }] }
+\`\`\`
+
+\`topK\` defaults to 8 and is clamped to 1-50. \`score\` is cosine similarity; higher is closer.
+
+### Share Links
+\`\`\`json
+POST /files/share { "key": "videos/demo.mp4", "allowDownload": false }
+→ { "success": true, "linkId": "...", "shareUrl": "https://bucket0.com/s/<linkId>", "streamUrl": "https://bucket0.com/api/cloud/share/stream?id=<linkId>" }
+\`\`\`
+
+- Works only for files in Agent Storage. Files written by a key with the My Drive destination return 404.
+- Anyone with the link can open it. \`allowDownload\` defaults to true.
+- Calling again for the same key returns the existing active link.
+- \`streamUrl\` supports Range requests, so audio and video can seek.
+- Limit: 100 share links per hour.
+
+### Move to Drive (dashboard only)
+Moving or copying an Agent Storage file into My Drive is done from the dashboard (Agent Storage > Move to Drive). The endpoint behind it, \`POST /files/move-to-drive\`, uses your signed-in session and does not accept \`b0ak_\` keys. Moving a file removes it from memory search.
+
 ### Error Codes
 | Code | Meaning |
 |------|---------|
-| 400 | Missing file, filename, or invalid folder path |
+| 400 | Missing file, filename, key or query, or invalid path |
 | 401 | Missing/invalid/expired API key |
-| 402 | Plan limit, storage quota, or file size exceeded |
+| 402 | Plan limit, storage quota, or file size exceeded; memory search not included in plan |
 | 404 | File or user not found |
-| 429 | Rate limit (100 uploads/min). Check X-RateLimit-* headers |`,
+| 409 | A file already exists at this path |
+| 429 | Rate limit (100 uploads/min, 100 share links/hour). Check X-RateLimit-* headers |
+| 503 | Memory search is not available |`,
+
+  mcp: `## MCP server
+
+URL: \`https://mcp.bucket0.com/mcp\` (Streamable HTTP)
+Auth: OAuth. Sign in with your Bucket0 account; there is no key to paste.
+
+### Connect
+1. In your MCP client, add a remote (custom) MCP server or connector with the URL above.
+2. When the client opens the Bucket0 sign-in page, sign in and approve access.
+3. Approving creates an AgentBucket API key for that client. It appears in **Dashboard > AgentBucket > API Keys**; delete it to disconnect the client.
+
+Claude Code:
+\`\`\`bash
+claude mcp add --transport http agentbucket https://mcp.bucket0.com/mcp
+\`\`\`
+Then run \`/mcp\` in Claude Code and choose the server to sign in.
+
+Claude, ChatGPT and Cursor: add the URL as a custom connector or remote MCP server in the client's settings.
+
+### Tools
+| Tool | What it does |
+|------|--------------|
+| save_file | Save text content to a path. \`index\` (default true) controls memory indexing |
+| search_memory | Search saved files by meaning. \`limit\` up to 50, default 8. Starter and up |
+| read_file | Read a saved text file |
+| list_files | List files, optionally under a folder, with paging |
+| delete_file | Delete a file |
+| create_folder | Create an empty folder |
+| create_streaming_link | Create a share link and a direct stream URL for an Agent Storage file. \`allowDownload\` default true |
+
+### Local server with an API key
+The \`agentbucket\` npm package runs the same tools locally over stdio, except \`create_streaming_link\`. It authenticates with an API key from the dashboard.
+
+\`\`\`bash
+claude mcp add agentbucket -e BUCKET0_API_KEY=b0ak_your_key -- npx -y agentbucket
+\`\`\`
+
+\`\`\`json
+{ "mcpServers": { "agentbucket": { "command": "npx", "args": ["-y", "agentbucket"], "env": { "BUCKET0_API_KEY": "b0ak_your_key" } } } }
+\`\`\`
+
+### Agent skill
+An AgentBucket skill that describes when and how to use these tools is published at https://bucket0.com/.well-known/agent-skills/agentbucket/SKILL.md (index: https://bucket0.com/.well-known/agent-skills/index.json).`,
 
   "s3-api": `## S3-Compatible API
 
@@ -580,612 +796,474 @@ On 429, check response headers:
 - \`X-RateLimit-Reset\`: Unix timestamp of reset`,
 };
 
-// --- Components ---
+// --- Page ---
 
-interface CodeBlockProps {
-  code: string;
-}
+const NAV: NavGroup[] = [
+  {
+    title: "Get started",
+    items: [
+      { id: "introduction", label: "Introduction" },
+      { id: "authentication", label: "Authentication" },
+    ],
+  },
+  {
+    title: "APIs",
+    items: [
+      { id: "agent-bucket", label: "AgentBucket API" },
+      { id: "mcp", label: "MCP server" },
+      { id: "s3-api", label: "S3-compatible API" },
+    ],
+  },
+  {
+    title: "Reference",
+    items: [
+      { id: "sdks", label: "SDK examples" },
+      { id: "rate-limits", label: "Rate limits" },
+    ],
+  },
+];
 
-function CodeBlock({ code }: CodeBlockProps) {
-  const [copied, setCopied] = useState(false);
+const LEAD = "Three ways to integrate: the AgentBucket API and MCP server for AI agents, and an S3-compatible API for standard tooling.";
 
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="relative group">
-      <pre className="bg-muted/50 border border-border rounded-lg p-4 overflow-x-auto text-sm">
-        <code className="text-foreground/80 font-mono">{code}</code>
-      </pre>
-      <button
-        onClick={handleCopy}
-        className="absolute top-2 right-2 p-2 rounded bg-background/80 border border-border opacity-0 group-hover:opacity-100 transition-opacity"
-      >
-        {copied ? (
-          <Check className="w-4 h-4 text-primary" />
-        ) : (
-          <Copy className="w-4 h-4 text-muted-foreground" />
-        )}
-      </button>
-    </div>
-  );
-}
-
-interface TabButtonProps {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}
-
-function TabButton({ active, onClick, children }: TabButtonProps) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-4 py-2 text-sm font-medium transition-colors ${
-        active
-          ? "text-primary border-b-2 border-primary"
-          : "text-muted-foreground hover:text-foreground"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
-interface SectionProps {
-  id: string;
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  markdown?: string;
-  children: React.ReactNode;
-}
-
-function Section({ id, icon, title, description, markdown, children }: SectionProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    if (!markdown) return;
-    await navigator.clipboard.writeText(markdown);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <section id={id} className="scroll-mt-20 mb-16">
-      <div className="flex items-center justify-between gap-3 mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            {icon}
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-foreground">{title}</h2>
-            <p className="text-muted-foreground text-sm">{description}</p>
-          </div>
-        </div>
-        {markdown && (
-          <button
-            onClick={handleCopy}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-border bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors text-xs flex-shrink-0"
-            title="Copy section as Markdown"
-          >
-            {copied ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-primary" />
-                <span className="hidden sm:inline">Copied</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Copy</span>
-              </>
-            )}
-          </button>
-        )}
-      </div>
-      <div className="mt-6">{children}</div>
-    </section>
-  );
+function sdkMarkdown(lang: SDKLanguage) {
+  const block = (title: string, code: string) => `### ${title}\n\n\`\`\`\n${code}\n\`\`\``;
+  return [
+    `## SDK Examples (${lang})`,
+    block("AgentBucket: upload file", codeSnippets.agentUpload[lang]),
+    block("AgentBucket: list files", codeSnippets.agentList[lang]),
+    block("AgentBucket: download file", codeSnippets.agentDownload[lang]),
+    block("AgentBucket: search memory", codeSnippets.agentMemorySearch[lang]),
+    block("AgentBucket: create share link", codeSnippets.agentShare[lang]),
+    block("S3: list buckets", codeSnippets.s3ListBuckets[lang]),
+    block("S3: upload", codeSnippets.s3Upload[lang]),
+    block("S3: download", codeSnippets.s3Download[lang]),
+  ].join("\n\n");
 }
 
 export default function DocsPage() {
-  const [activeLanguage, setActiveLanguage] = useState<SDKLanguage>("JavaScript");
-  const [activeSection, setActiveSection] = useState("introduction");
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const mainRef = useRef<HTMLElement>(null);
+  const [lang, setLang] = useState<SDKLanguage>("JavaScript");
+  const snippet = (name: keyof typeof codeSnippets) => (
+    <CodeGroup tabs={SDK_LANGUAGES} active={lang} onChange={setLang} codes={codeSnippets[name]} />
+  );
 
-  const handleSearch = useCallback(() => {
-    if (!searchQuery.trim() || !mainRef.current) return;
-    const walker = document.createTreeWalker(
-      mainRef.current,
-      NodeFilter.SHOW_TEXT,
-      null,
-    );
-    let node: Node | null;
-    while ((node = walker.nextNode())) {
-      if (node.textContent?.toLowerCase().includes(searchQuery.toLowerCase())) {
-        const el = node.parentElement;
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "center" });
-          const orig = el.style.backgroundColor;
-          el.style.backgroundColor = "hsl(var(--primary) / 0.2)";
-          setTimeout(() => { el.style.backgroundColor = orig; }, 2000);
-          return;
-        }
-      }
-    }
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (searchOpen && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, [searchOpen]);
-
-  const navItems = [
-    { id: "introduction", label: "Introduction" },
-    { id: "authentication", label: "Authentication" },
-    { id: "agent-bucket", label: "AgentBucket API" },
-    { id: "s3-api", label: "S3-Compatible API" },
-    { id: "sdks", label: "SDK Examples" },
-    { id: "rate-limits", label: "Rate Limits" },
-  ];
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: "-20% 0% -60% 0%",
-        threshold: 0,
-      }
-    );
-
-    navItems.forEach((item) => {
-      const element = document.getElementById(item.id);
-      if (element) {
-        observer.observe(element);
-      }
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const markdownFor = (id: string) => (id === "sdks" ? sdkMarkdown(lang) : sectionMarkdown[id]);
+  const pageMarkdown = () =>
+    [`# Bucket0 developer docs`, LEAD, ...NAV.flatMap((g) => g.items.map((i) => markdownFor(i.id)))].filter(Boolean).join("\n\n");
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-6 pt-28 lg:pt-36 pb-12 flex gap-12">
-        {/* Sidebar */}
-        <aside className="hidden lg:block w-64 flex-shrink-0">
-          <nav className="sticky top-24 space-y-1">
-            {navItems.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                className={`block px-3 py-2 text-sm rounded-lg transition-colors ${
-                  activeSection === item.id
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                }`}
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </aside>
+    <DocsLayout
+      groups={NAV}
+      label="Developer docs"
+      title="Build on Bucket0"
+      lead={LEAD}
+      pageMarkdown={pageMarkdown}
+      sectionMarkdown={markdownFor}
+    >
+      <DocSection id="introduction" title="Introduction" description="What you can build with Bucket0">
+        <P>Bucket0 gives you three ways to reach your storage from code or from an AI agent.</P>
+        <Definitions
+          items={[
+            {
+              term: "AgentBucket API",
+              description: (
+                <>
+                  Designed for AI agents. Create API keys from your dashboard, then use Bearer token auth to upload, download,
+                  list, delete and share files, create folders and search file contents by meaning. Keys start with{" "}
+                  <Code>b0ak_</Code>.
+                </>
+              ),
+            },
+            {
+              term: "MCP server",
+              description: (
+                <>
+                  Add <Code>https://mcp.bucket0.com/mcp</Code> to Claude, ChatGPT, Cursor or another MCP client and sign in with
+                  your Bucket0 account. Your agent gets the same file and memory tools without a key to paste. See{" "}
+                  <a href="#mcp" className={textLink}>
+                    MCP server
+                  </a>
+                  .
+                </>
+              ),
+            },
+            {
+              term: "S3-compatible API",
+              description: (
+                <>
+                  A standard S3 endpoint with AWS Signature V4 authentication. Create access keys from your dashboard, then use
+                  any S3 client: AWS CLI, boto3, aws-sdk, Cyberduck, rclone. Access keys look like{" "}
+                  <Code>B0IAXXXXXXXXXXXXXXXX</Code>.
+                </>
+              ),
+            },
+          ]}
+        />
+        <P>
+          Bucket0 is open source under AGPL-3.0. The code behind every endpoint on this page is{" "}
+          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={textLink}>
+            on GitHub
+          </a>
+          .
+        </P>
+      </DocSection>
 
-        {/* Main Content */}
-        <main ref={mainRef} className="flex-1 min-w-0 max-w-4xl pt-8">
-          {/* Hero */}
-          <div className="mb-12">
-            <div className="flex items-start justify-between gap-4">
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-4xl font-bold text-foreground mb-4"
-              >
-                Bucket0 Developer Docs
-              </motion.h1>
-              <div className="flex items-center gap-2 flex-shrink-0 pt-2">
-                {searchOpen ? (
-                  <form
-                    onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
-                    className="flex items-center gap-1 bg-muted/50 border border-border rounded-lg px-2 py-1 animate-in fade-in slide-in-from-right-2 duration-200"
-                  >
-                    <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                    <input
-                      ref={searchInputRef}
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search docs..."
-                      className="bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none w-40"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
-                      className="p-0.5 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </form>
-                ) : (
-                  <button
-                    onClick={() => setSearchOpen(true)}
-                    className="p-2 rounded-lg border border-border bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                    title="Search docs"
-                  >
-                    <Search className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            </div>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-lg text-muted-foreground"
-            >
-              Two ways to integrate: AgentBucket API for AI agents, and an S3-compatible API for standard tooling.
-            </motion.p>
-          </div>
+      <DocSection id="authentication" title="Authentication" description="How to get credentials from the dashboard">
+        <H3 id="authentication-bearer">AgentBucket: Bearer token</H3>
+        <Steps>
+          {[
+            <>Go to <strong>Dashboard &gt; AgentBucket &gt; API Keys &gt; New Key</strong>.</>,
+            <>Name your key, for example <Code>my-coding-agent</Code>.</>,
+            <>
+              Choose a destination: <strong>AgentBucket</strong> (files go to the review tab) or <strong>My Drive</strong> (files go
+              straight to your drive, optionally into a folder).
+            </>,
+            <>Copy the key. It is shown only once.</>,
+            <>
+              Copy the <strong>API Guide</strong> from the same tab and give it to your agent as a reference file. It covers
+              endpoints, examples, error handling and best practices.
+            </>,
+          ]}
+        </Steps>
+        <CodeBlock code="Authorization: Bearer b0ak_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
 
-          {/* Feature Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16"
-          >
-            <div className="flex gap-4 p-4 rounded-xl border border-border bg-card">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
-                <MdOutlineSmartToy className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-foreground mb-1">AgentBucket API</h3>
-                <p className="text-sm text-muted-foreground">
-                  Bearer token auth for AI agents to upload, download, list, delete files, and create folders
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4 p-4 rounded-xl border border-border bg-card">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
-                <MdOutlineApi className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-foreground mb-1">S3-Compatible API</h3>
-                <p className="text-sm text-muted-foreground">
-                  AWS Signature V4 auth — works with AWS CLI, SDKs, Cyberduck, rclone, and more
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Introduction */}
-          <Section
-            id="introduction"
-            icon={<BookOpen className="w-5 h-5 text-primary" />}
-            title="Introduction"
-            description="What you can build with Bucket0"
-            markdown={sectionMarkdown.introduction}
-          >
-            <div className="prose prose-invert max-w-none space-y-4">
-              <p className="text-muted-foreground">
-                Bucket0 exposes two developer APIs for programmatic access to your storage:
-              </p>
-
-              <div className="space-y-3">
-                <div className="p-4 rounded-lg border border-border">
-                  <h4 className="font-semibold text-foreground mb-1">AgentBucket API</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Designed for AI agents. Create API keys from your dashboard, then use Bearer token
-                    auth to upload, download, list, delete files, and create folders. Keys are prefixed with{" "}
-                    <code className="px-2 py-1 bg-muted rounded text-sm">b0ak_</code>.
-                  </p>
-                </div>
-                <div className="p-4 rounded-lg border border-border">
-                  <h4 className="font-semibold text-foreground mb-1">S3-Compatible API</h4>
-                  <p className="text-sm text-muted-foreground">
-                    A standard S3 endpoint with AWS Signature V4 authentication. Create access keys from
-                    your dashboard, then use any S3 client — AWS CLI, boto3, aws-sdk, Cyberduck, rclone, etc.
-                    Access key format: <code className="px-2 py-1 bg-muted rounded text-sm">B0IAXXXXXXXXXXXXXXXX</code>.
-                  </p>
-                </div>
-              </div>
-
-
-            </div>
-          </Section>
-
-          {/* Authentication */}
-          <Section
-            id="authentication"
-            icon={<Shield className="w-5 h-5 text-primary" />}
-            title="Authentication"
-            description="How to get credentials from the dashboard"
-            markdown={sectionMarkdown.authentication}
-          >
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">AgentBucket — Bearer Token</h3>
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground"><strong>1.</strong> Go to <strong>Dashboard &gt; AgentBucket &gt; API Keys &gt; New Key</strong></p>
-                  <p className="text-sm text-muted-foreground"><strong>2.</strong> Name your key (e.g., &quot;my-coding-agent&quot;)</p>
-                  <p className="text-sm text-muted-foreground"><strong>3.</strong> Choose destination: <strong>AgentBucket</strong> (files go to review tab) or <strong>My Drive</strong> (files go directly to your drive, optionally into a folder)</p>
-                  <p className="text-sm text-muted-foreground"><strong>4.</strong> Copy the key — it&apos;s shown only once</p>
-                  <p className="text-sm text-muted-foreground"><strong>5.</strong> Copy the <strong>API Guide</strong> (available in the same tab) and give it to your agent as a reference file — it includes endpoints, examples, error handling, and best practices for instant setup</p>
-                </div>
-                <CodeBlock
-                  code="Authorization: Bearer b0ak_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                />
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">S3 API — AWS Signature V4</h3>
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground"><strong>1.</strong> Go to <strong>Dashboard &gt; S3 API &gt; Access Keys &gt; Create Key</strong></p>
-                  <p className="text-sm text-muted-foreground"><strong>2.</strong> Name your key (e.g., &quot;CLI Access&quot;)</p>
-                  <p className="text-sm text-muted-foreground"><strong>3.</strong> Copy both the Access Key ID (<code className="px-1 py-0.5 bg-muted rounded text-xs">B0IAXXXXXXXXXXXXXXXX</code>) and Secret Access Key — shown only once</p>
-                  <p className="text-sm text-muted-foreground"><strong>4.</strong> Copy the <strong>S3 API Integration Guide</strong> (available in the same tab) and give it to your agent — it covers all S3 operations, error handling, and best practices</p>
-                </div>
-                <CodeBlock
-                  code={`aws configure --profile bucket0
+        <H3 id="authentication-s3">S3 API: AWS Signature V4</H3>
+        <Steps>
+          {[
+            <>Go to <strong>Dashboard &gt; S3 API &gt; Access Keys &gt; Create Key</strong>.</>,
+            <>Name your key, for example <Code>CLI Access</Code>.</>,
+            <>
+              Copy both the Access Key ID (<Code>B0IAXXXXXXXXXXXXXXXX</Code>) and the Secret Access Key. They are shown only once.
+            </>,
+            <>
+              Copy the <strong>S3 API Integration Guide</strong> from the same tab and give it to your agent. It covers every S3
+              operation, error handling and best practices.
+            </>,
+          ]}
+        </Steps>
+        <CodeBlock
+          title="Terminal"
+          code={`aws configure --profile bucket0
 AWS Access Key ID: B0IAXXXXXXXXXXXXXXXX
 AWS Secret Access Key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Default region name: auto`}
-                />
-                <p className="text-sm text-muted-foreground">
-                  Endpoint: <code className="px-2 py-1 bg-muted rounded text-sm">https://s3.bucket0.com</code>
-                </p>
-              </div>
+        />
+        <P>
+          Endpoint: <Code>https://s3.bucket0.com</Code>
+        </P>
+        <Callout title="Keys are shown once" icon={<LockCloseIcon aria-hidden className="size-4" />}>
+          API keys and S3 credentials are shown only at creation, so store them somewhere safe. You can deactivate or delete keys
+          from the dashboard at any time.
+        </Callout>
+      </DocSection>
 
-              <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20">
-                <p className="text-sm text-destructive">
-                  <strong>Important:</strong> Both API keys and S3 credentials are shown only once at creation.
-                  Store them securely. You can deactivate or delete keys anytime from the dashboard.
-                </p>
-              </div>
-            </div>
-          </Section>
+      <DocSection id="agent-bucket" title="AgentBucket API" description="File storage for AI agents">
+        <P>
+          AgentBucket lets AI agents save files to your storage with an API key. Files land in your Agent Storage tab by default,
+          so you can review them before moving them to your drive, or straight in your Drive if the key uses the “My Drive”
+          destination.
+        </P>
+        <P>
+          Base URL: <Code>https://bucket0.com/api/agent-bucket</Code>
+        </P>
 
-          {/* AgentBucket */}
-          <Section
-            id="agent-bucket"
-            icon={<MdOutlineSmartToy className="w-5 h-5 text-primary" />}
-            title="AgentBucket API"
-            description="File storage for AI agents"
-            markdown={sectionMarkdown["agent-bucket"]}
-          >
-            <div className="space-y-6">
-              <p className="text-muted-foreground">
-                AgentBucket lets AI agents save files directly to your storage using API keys.
-                Files land in your Agent Storage tab by default (for review before moving to drive),
-                or directly in your Drive if the key is configured with &quot;My Drive&quot; destination.
-              </p>
+        <H3 id="agent-bucket-endpoints">Endpoints</H3>
+        <Endpoints
+          items={[
+            { method: "POST", path: "/api/agent-bucket/files/upload", description: "Upload a file (multipart/form-data)" },
+            { method: "GET", path: "/api/agent-bucket/files", description: "List files (paginated)" },
+            { method: "GET", path: "/api/agent-bucket/files/download", description: "Download a file by key" },
+            { method: "DELETE", path: "/api/agent-bucket/files", description: "Delete a file by key" },
+            { method: "POST", path: "/api/agent-bucket/files/folder", description: "Create a folder" },
+            { method: "POST", path: "/api/agent-bucket/files/share", description: "Create a share link for an Agent Storage file" },
+            { method: "POST", path: "/api/agent-bucket/memory/search", description: "Search indexed file contents by meaning" },
+          ]}
+        />
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Endpoints</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">POST /api/agent-bucket/files/upload</code>
-                    <p className="text-muted-foreground mt-1">Upload a file (multipart/form-data)</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">GET /api/agent-bucket/files</code>
-                    <p className="text-muted-foreground mt-1">List files (paginated)</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">GET /api/agent-bucket/files/download</code>
-                    <p className="text-muted-foreground mt-1">Download a file by key</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">DELETE /api/agent-bucket/files</code>
-                    <p className="text-muted-foreground mt-1">Delete a file by key</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">POST /api/agent-bucket/files/folder</code>
-                    <p className="text-muted-foreground mt-1">Create a folder</p>
-                  </div>
-                </div>
-              </div>
+        <H3 id="agent-bucket-upload">Upload a file</H3>
+        <P>
+          Send <Code>multipart/form-data</Code> with a <Code>file</Code> field and an optional <Code>filename</Code> (defaults to
+          the file&apos;s name). Files are encrypted with AES-128-GCM automatically.
+        </P>
+        {snippet("agentUpload")}
+        <P>
+          The response includes <Code>success</Code>, <Code>key</Code>, <Code>fileName</Code>, <Code>size</Code> and{" "}
+          <Code>destination</Code> (<Code>agent</Code> or <Code>drive</Code>).
+        </P>
+        <P>
+          On plans with memory search, text files are indexed after the upload finishes. Add an <Code>index</Code> field set to{" "}
+          <Code>false</Code> to skip indexing for a file, for example scratch output you won&apos;t need to search.
+        </P>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Upload a File</h3>
-                <p className="text-sm text-muted-foreground">
-                  Send <code className="px-1 py-0.5 bg-muted rounded text-xs">multipart/form-data</code> with
-                  a <code className="px-1 py-0.5 bg-muted rounded text-xs">file</code> field and
-                  optional <code className="px-1 py-0.5 bg-muted rounded text-xs">filename</code> (defaults to file name).
-                  Files are encrypted with AES-128-GCM automatically.
-                </p>
-                <CodeBlock code={codeSnippets.agentUpload.JavaScript} />
-                <p className="text-sm text-muted-foreground mt-2">
-                  Response includes: <code className="px-1 py-0.5 bg-muted rounded text-xs">success</code>,{" "}
-                  <code className="px-1 py-0.5 bg-muted rounded text-xs">key</code>,{" "}
-                  <code className="px-1 py-0.5 bg-muted rounded text-xs">fileName</code>,{" "}
-                  <code className="px-1 py-0.5 bg-muted rounded text-xs">size</code>,{" "}
-                  <code className="px-1 py-0.5 bg-muted rounded text-xs">destination</code> (&quot;agent&quot; or &quot;drive&quot;).
-                </p>
-              </div>
+        <H3 id="agent-bucket-list">List files</H3>
+        {snippet("agentList")}
+        <P>
+          Parameters: <Code>page</Code> (default 1) and <Code>pageSize</Code> (default 50, max 100). Each file includes key,
+          fileName, size, mimeType, isStarred, uploadedVia, createdAt and updatedAt.
+        </P>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">List Files</h3>
-                <CodeBlock code={codeSnippets.agentList.JavaScript} />
-                <p className="text-sm text-muted-foreground">
-                  Params: <code className="px-1 py-0.5 bg-muted rounded text-xs">page</code> (default 1),{" "}
-                  <code className="px-1 py-0.5 bg-muted rounded text-xs">pageSize</code> (default 50, max 100).
-                  Each file includes: key, fileName, size, mimeType, isStarred, uploadedVia, createdAt, updatedAt.
-                </p>
-              </div>
+        <H3 id="agent-bucket-download">Download a file</H3>
+        <P>
+          Returns the file as a binary stream, decrypted. Response headers include Content-Type, Content-Disposition and
+          Content-Length.
+        </P>
+        {snippet("agentDownload")}
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Download a File</h3>
-                <p className="text-sm text-muted-foreground">
-                  Returns the binary file stream. Files are automatically decrypted. Response
-                  headers include Content-Type, Content-Disposition, and Content-Length.
-                </p>
-                <CodeBlock code={codeSnippets.agentDownload.JavaScript} />
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Delete a File</h3>
-                <p className="text-sm text-muted-foreground">
-                  Deletes the file and automatically releases storage quota.
-                </p>
-                <CodeBlock
-                  code={`DELETE /api/agent-bucket/files?key=research/results.json
+        <H3 id="agent-bucket-delete">Delete a file</H3>
+        <P>Deletes the file and releases its storage quota.</P>
+        <CodeBlock
+          code={`DELETE /api/agent-bucket/files?key=research/results.json
 Authorization: Bearer b0ak_xxx...
 
 → { "success": true }`}
-                />
-              </div>
+        />
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Create a Folder</h3>
-                <p className="text-sm text-muted-foreground">
-                  Creates a folder marker. Path cannot contain <code className="px-1 py-0.5 bg-muted rounded text-xs">..</code> or <code className="px-1 py-0.5 bg-muted rounded text-xs">//</code>.
-                </p>
-                <CodeBlock
-                  code={`POST /api/agent-bucket/files/folder
+        <H3 id="agent-bucket-folder">Create a folder</H3>
+        <P>
+          Creates a folder marker. The path cannot contain <Code>..</Code> or <Code>//</Code>.
+        </P>
+        <CodeBlock
+          code={`POST /api/agent-bucket/files/folder
 Authorization: Bearer b0ak_xxx...
 Content-Type: application/json
 
 { "path": "reports/daily" }
 
 → { "success": true, "path": "reports/daily/" }`}
-                />
-              </div>
+        />
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Error Codes</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">400</code>
-                    <p className="text-muted-foreground mt-1">Missing file, filename, or invalid path</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">401</code>
-                    <p className="text-muted-foreground mt-1">Missing, invalid, or expired API key</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">402</code>
-                    <p className="text-muted-foreground mt-1">Plan limit, storage quota, or file size exceeded</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">404</code>
-                    <p className="text-muted-foreground mt-1">File not found</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">429</code>
-                    <p className="text-muted-foreground mt-1">Rate limit exceeded (100/min)</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Section>
+        <H3 id="agent-bucket-memory">Search memory</H3>
+        <P>
+          Memory search finds passages in your agent&apos;s files by meaning rather than exact words. It is included on Starter,
+          Pro and Scale. Files uploaded through the API are indexed automatically after the upload finishes.
+        </P>
+        {snippet("agentMemorySearch")}
+        <P>
+          Send <Code>query</Code> and an optional <Code>topK</Code> (default 8, clamped to 1-50). Each result has{" "}
+          <Code>fileName</Code>, <Code>key</Code>, <Code>chunkIndex</Code>, <Code>snippet</Code> and <Code>score</Code>.
+          The score is cosine similarity: higher means closer.
+        </P>
+        <H4>What gets indexed</H4>
+        <Bullets
+          items={[
+            "Text files up to 1 MB: text/*, JSON, XML, YAML, CSV, JavaScript and TypeScript, plus common code and config extensions such as .md, .py, .go, .rs, .sql, .toml and .log",
+            "PDFs, images and other binary files are not indexed",
+            "Content is split into 1,000-character chunks with 100 characters of overlap, and chunk text is stored encrypted",
+            "Uploading to the same key replaces that file's chunks; moving a file to My Drive removes them",
+          ]}
+        />
+        <H4>Chunk limits</H4>
+        <div className="my-5 overflow-x-auto rounded-[10px] border border-[var(--line)] bg-[var(--paper-card)]">
+          <table className="w-full text-left text-[14px]">
+            <thead>
+              <tr className="border-b border-[var(--line)] text-[12px] tracking-[0.08em] text-[var(--ink-soft)] uppercase">
+                <th className="px-4 py-2.5 font-medium">Plan</th>
+                <th className="px-4 py-2.5 font-medium">Indexed chunks</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--line)]">
+              {[
+                ["Free", "Not included"],
+                ["Starter", "10,000"],
+                ["Pro", "50,000"],
+                ["Scale", "200,000"],
+              ].map(([plan, chunks]) => (
+                <tr key={plan}>
+                  <td className="px-4 py-2.5 text-[var(--ink)]">{plan}</td>
+                  <td className="px-4 py-2.5 font-mono text-[13px] tabular-nums">{chunks}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <P>When you reach the limit, files still upload, but text beyond the limit is not indexed.</P>
 
-          {/* S3 API */}
-          <Section
-            id="s3-api"
-            icon={<MdOutlineApi className="w-5 h-5 text-primary" />}
-            title="S3-Compatible API"
-            description="Use AWS SDKs, CLI, and S3 tools"
-            markdown={sectionMarkdown["s3-api"]}
-          >
-            <div className="space-y-6">
-              <p className="text-muted-foreground">
-                Full S3-compatible API with AWS Signature V4. Use AWS CLI, SDKs, Cyberduck, WinSCP, rclone, and any other S3 client.
-              </p>
+        <H3 id="agent-bucket-share">Create a share link</H3>
+        <P>
+          Creates a public link for a file in Agent Storage, so a person can open what your agent made. Anyone with the link can
+          view it without signing in.
+        </P>
+        {snippet("agentShare")}
+        <Bullets
+          items={[
+            <>
+              <Code>shareUrl</Code> opens a viewer page. <Code>streamUrl</Code> serves the file directly and supports Range
+              requests, so you can embed audio or video and seek.
+            </>,
+            <>
+              <Code>allowDownload</Code> defaults to <Code>true</Code>. Set it to <Code>false</Code> for view-only.
+            </>,
+            "Calling it again for the same key returns the existing active link",
+            "Only files in Agent Storage can be shared this way. Files written by a key with the My Drive destination return 404; share those from your drive",
+            "Limit: 100 share links per hour",
+          ]}
+        />
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Endpoint</h3>
-                <CodeBlock code="https://s3.bucket0.com" />
-              </div>
+        <H3 id="agent-bucket-move-to-drive">Move files to your drive</H3>
+        <P>
+          Moving files from Agent Storage into My Drive is a dashboard action: open <strong>Agent Storage</strong> and choose{" "}
+          <strong>Move to Drive</strong>. The endpoint behind it, <Code>POST /api/agent-bucket/files/move-to-drive</Code>, uses
+          your signed-in session and does not accept <Code>b0ak_</Code> keys. If you want an agent&apos;s files to land in your
+          drive directly, give its key the My Drive destination.
+        </P>
+        <Bullets
+          items={[
+            "A moved file leaves Agent Storage and is no longer returned by memory search",
+            "If a file with the same name exists in the target folder, the moved file gets a timestamp suffix",
+          ]}
+        />
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Supported Operations</h3>
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">GET /</code>
-                    <p className="text-muted-foreground mt-1">ListBuckets</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">GET /{'{bucket}'}</code>
-                    <p className="text-muted-foreground mt-1">ListObjectsV2</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">HEAD /{'{bucket}'}</code>
-                    <p className="text-muted-foreground mt-1">HeadBucket</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">PUT /{'{bucket}'}</code>
-                    <p className="text-muted-foreground mt-1">CreateBucket</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">DELETE /{'{bucket}'}</code>
-                    <p className="text-muted-foreground mt-1">DeleteBucket (must be empty)</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">GET /{'{bucket}'}/{'{key}'}</code>
-                    <p className="text-muted-foreground mt-1">GetObject (Range supported)</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">HEAD /{'{bucket}'}/{'{key}'}</code>
-                    <p className="text-muted-foreground mt-1">HeadObject</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">PUT /{'{bucket}'}/{'{key}'}</code>
-                    <p className="text-muted-foreground mt-1">PutObject (auto-creates bucket)</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">DELETE /{'{bucket}'}/{'{key}'}</code>
-                    <p className="text-muted-foreground mt-1">DeleteObject (idempotent)</p>
-                  </div>
-                </div>
-              </div>
+        <H3 id="agent-bucket-errors">Error codes</H3>
+        <Definitions
+          items={[
+            { term: "400", description: "Missing file, filename, key or query, or invalid path" },
+            { term: "401", description: "Missing, invalid, or expired API key" },
+            { term: "402", description: "Plan limit, storage quota, or file size exceeded, or memory search is not included in your plan" },
+            { term: "404", description: "File not found, or not in Agent Storage (share links)" },
+            { term: "409", description: "A file already exists at this path" },
+            { term: "429", description: "Rate limit exceeded (100 uploads per minute, 100 share links per hour)" },
+            { term: "503", description: "Memory search is not available" },
+          ]}
+        />
+      </DocSection>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Behavior</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li className="flex gap-2"><ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" /><span>Buckets auto-create on first PutObject — no need to CreateBucket first</span></li>
-                  <li className="flex gap-2"><ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" /><span>DeleteObject returns 204 even if the object doesn&apos;t exist (idempotent)</span></li>
-                  <li className="flex gap-2"><ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" /><span>GetObject supports Range requests (returns 206 Partial Content)</span></li>
-                  <li className="flex gap-2"><ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" /><span>PutObject enforces plan storage and file size limits with atomic quota reservation</span></li>
-                  <li className="flex gap-2"><ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" /><span>DeleteBucket requires the bucket to be empty first</span></li>
-                  <li className="flex gap-2"><ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" /><span>ListObjectsV2 supports prefix, delimiter, max-keys, and continuation-token</span></li>
-                </ul>
-              </div>
+      <DocSection id="mcp" title="MCP server" description="Connect Claude, ChatGPT, Cursor and other MCP clients">
+        <P>
+          The Bucket0 MCP server gives an AI client the AgentBucket file and memory tools. You sign in with your Bucket0 account,
+          so there is no API key to copy.
+        </P>
+        <P>
+          Server URL: <Code>https://mcp.bucket0.com/mcp</Code> (Streamable HTTP, OAuth)
+        </P>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">List Buckets</h3>
-                <CodeBlock code={codeSnippets.s3ListBuckets.JavaScript} />
-              </div>
+        <H3 id="mcp-connect">Connect a client</H3>
+        <Steps>
+          {[
+            <>In your MCP client, add a remote (custom) MCP server or connector and enter the server URL.</>,
+            <>When the client opens the Bucket0 sign-in page, sign in and approve access.</>,
+            <>
+              Approving creates an AgentBucket API key for that client. It appears in{" "}
+              <strong>Dashboard &gt; AgentBucket &gt; API Keys</strong>. Delete the key to revoke the client&apos;s access.
+            </>,
+          ]}
+        </Steps>
+        <H4>Claude Code</H4>
+        <CodeBlock title="Terminal" code="claude mcp add --transport http agentbucket https://mcp.bucket0.com/mcp" />
+        <P>
+          Then run <Code>/mcp</Code> in Claude Code and choose <Code>agentbucket</Code> to sign in.
+        </P>
+        <H4>Claude, ChatGPT and Cursor</H4>
+        <P>
+          Add the server URL as a custom connector or remote MCP server in the app&apos;s settings, then complete the sign-in when
+          prompted. Where this setting lives depends on the app.
+        </P>
+        <P>
+          Files saved through MCP land in Agent Storage, the same place as files uploaded with an API key.
+        </P>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Upload a File</h3>
-                <CodeBlock code={codeSnippets.s3Upload.JavaScript} />
-              </div>
+        <H3 id="mcp-tools">Tools</H3>
+        <Definitions
+          items={[
+            { term: "save_file", description: <>Save text content to a path. <Code>index</Code> (default true) controls memory indexing.</> },
+            { term: "search_memory", description: <>Search saved files by meaning. <Code>limit</Code> up to 50, default 8. Starter and up.</> },
+            { term: "read_file", description: "Read back a saved text file" },
+            { term: "list_files", description: <>List files, optionally under a <Code>folder</Code>, with <Code>page</Code> for paging.</> },
+            { term: "delete_file", description: "Delete a file" },
+            { term: "create_folder", description: "Create an empty folder. Saving to a nested path creates folders anyway" },
+            {
+              term: "create_streaming_link",
+              description: (
+                <>
+                  Create a share link and a direct stream URL for a file in Agent Storage. <Code>allowDownload</Code> defaults to
+                  true.
+                </>
+              ),
+            },
+          ]}
+        />
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Download a File</h3>
-                <p className="text-sm text-muted-foreground">
-                  Response includes standard S3 headers: Content-Type, Content-Length, ETag, Last-Modified, Accept-Ranges.
-                </p>
-                <CodeBlock code={codeSnippets.s3Download.JavaScript} />
-              </div>
+        <H3 id="mcp-local">Local server with an API key</H3>
+        <P>
+          If your client only runs local servers, or you prefer a key, the <Code>agentbucket</Code> npm package runs the same
+          tools over stdio, except <Code>create_streaming_link</Code>. Create a key in the dashboard and pass it as{" "}
+          <Code>BUCKET0_API_KEY</Code>.
+        </P>
+        <CodeBlock title="Claude Code" code="claude mcp add agentbucket -e BUCKET0_API_KEY=b0ak_your_key -- npx -y agentbucket" />
+        <CodeBlock
+          title="mcp.json"
+          code={`{
+  "mcpServers": {
+    "agentbucket": {
+      "command": "npx",
+      "args": ["-y", "agentbucket"],
+      "env": { "BUCKET0_API_KEY": "b0ak_your_key" }
+    }
+  }
+}`}
+        />
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">AWS CLI</h3>
-                <CodeBlock
-                  code={`# Configure
+        <H3 id="mcp-skill">Agent skill</H3>
+        <P>
+          An AgentBucket skill describes when an agent should save, search and share files. Point your agent at{" "}
+          <a href="/.well-known/agent-skills/agentbucket/SKILL.md" className={textLink}>
+            SKILL.md
+          </a>{" "}
+          or the{" "}
+          <a href="/.well-known/agent-skills/index.json" className={textLink}>
+            skills index
+          </a>
+          .
+        </P>
+      </DocSection>
+
+      <DocSection id="s3-api" title="S3-compatible API" description="Use AWS SDKs, CLI, and S3 tools">
+        <P>
+          An S3-compatible API with AWS Signature V4. Use the AWS CLI, SDKs, Cyberduck, WinSCP, rclone or any other S3 client.
+        </P>
+
+        <H3 id="s3-api-endpoint">Endpoint</H3>
+        <CodeBlock code="https://s3.bucket0.com" />
+
+        <H3 id="s3-api-operations">Supported operations</H3>
+        <Endpoints
+          items={[
+            { method: "GET", path: "/", description: "ListBuckets" },
+            { method: "GET", path: "/{bucket}", description: "ListObjectsV2" },
+            { method: "HEAD", path: "/{bucket}", description: "HeadBucket" },
+            { method: "PUT", path: "/{bucket}", description: "CreateBucket" },
+            { method: "DELETE", path: "/{bucket}", description: "DeleteBucket (must be empty)" },
+            { method: "GET", path: "/{bucket}/{key}", description: "GetObject (Range supported)" },
+            { method: "HEAD", path: "/{bucket}/{key}", description: "HeadObject" },
+            { method: "PUT", path: "/{bucket}/{key}", description: "PutObject (auto-creates bucket)" },
+            { method: "DELETE", path: "/{bucket}/{key}", description: "DeleteObject (idempotent)" },
+          ]}
+        />
+
+        <H3 id="s3-api-behavior">Behavior</H3>
+        <Bullets
+          items={[
+            "Buckets are created on the first PutObject, so you don’t need to call CreateBucket first",
+            "DeleteObject returns 204 even if the object doesn’t exist (idempotent)",
+            "GetObject supports Range requests (returns 206 Partial Content)",
+            "PutObject enforces plan storage and file size limits with atomic quota reservation",
+            "DeleteBucket requires the bucket to be empty first",
+            "ListObjectsV2 supports prefix, delimiter, max-keys, and continuation-token",
+          ]}
+        />
+
+        <H3 id="s3-api-list-buckets">List buckets</H3>
+        <CodeBlock title="JavaScript" code={codeSnippets.s3ListBuckets.JavaScript} />
+
+        <H3 id="s3-api-upload">Upload a file</H3>
+        <CodeBlock title="JavaScript" code={codeSnippets.s3Upload.JavaScript} />
+
+        <H3 id="s3-api-download">Download a file</H3>
+        <P>The response includes the standard S3 headers: Content-Type, Content-Length, ETag, Last-Modified and Accept-Ranges.</P>
+        <CodeBlock title="JavaScript" code={codeSnippets.s3Download.JavaScript} />
+
+        <H3 id="s3-api-cli">AWS CLI</H3>
+        <CodeBlock
+          title="Terminal"
+          code={`# Configure
 aws configure --profile bucket0
 AWS Access Key ID: B0IAXXXXXXXXXXXXXXXX
 AWS Secret Access Key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1202,150 +1280,88 @@ aws s3 cp report.pdf s3://my-bucket/documents/report.pdf \\
 # Download file
 aws s3 cp s3://my-bucket/documents/report.pdf ./report.pdf \\
   --endpoint-url https://s3.bucket0.com --profile bucket0`}
-                />
-              </div>
+        />
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">S3 Error Codes</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">AccessDenied</code>
-                    <p className="text-muted-foreground mt-1">Invalid signature or expired credentials</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">NoSuchBucket</code>
-                    <p className="text-muted-foreground mt-1">Bucket does not exist</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">NoSuchKey</code>
-                    <p className="text-muted-foreground mt-1">Object does not exist</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">BucketNotEmpty</code>
-                    <p className="text-muted-foreground mt-1">Cannot delete non-empty bucket</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">QuotaExceeded</code>
-                    <p className="text-muted-foreground mt-1">Storage limit reached</p>
-                  </div>
-                  <div className="p-3 rounded-lg border border-border">
-                    <code className="text-primary">EntityTooLarge</code>
-                    <p className="text-muted-foreground mt-1">File exceeds plan size limit</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Section>
+        <H3 id="s3-api-errors">S3 error codes</H3>
+        <Definitions
+          items={[
+            { term: "AccessDenied", description: "Invalid signature or expired credentials" },
+            { term: "NoSuchBucket", description: "Bucket does not exist" },
+            { term: "NoSuchKey", description: "Object does not exist" },
+            { term: "BucketNotEmpty", description: "Cannot delete non-empty bucket" },
+            { term: "QuotaExceeded", description: "Storage limit reached" },
+            { term: "EntityTooLarge", description: "File exceeds plan size limit" },
+          ]}
+        />
+      </DocSection>
 
-          {/* SDK Examples */}
-          <Section
-            id="sdks"
-            icon={<Code className="w-5 h-5 text-primary" />}
-            title="SDK Examples"
-            description="Code examples in JavaScript, Python, Go, and Rust"
-          >
-            <div className="space-y-6">
-              <div className="flex gap-2 border-b border-border">
-                {SDK_LANGUAGES.map((lang) => (
-                  <TabButton
-                    key={lang}
-                    active={activeLanguage === lang}
-                    onClick={() => setActiveLanguage(lang)}
-                  >
-                    {lang}
-                  </TabButton>
-                ))}
-              </div>
+      <DocSection id="sdks" title="SDK examples" description="Code examples in JavaScript, Python, Go, and Rust">
+        <P>Pick a language once; every example on this page follows it.</P>
+        <H3 id="sdks-agent-bucket">AgentBucket</H3>
+        <H4>Upload file</H4>
+        {snippet("agentUpload")}
+        <H4>List files</H4>
+        {snippet("agentList")}
+        <H4>Download file</H4>
+        {snippet("agentDownload")}
+        <H4>Search memory</H4>
+        {snippet("agentMemorySearch")}
+        <H4>Create share link</H4>
+        {snippet("agentShare")}
 
-              <div className="space-y-8">
-                <h3 className="text-lg font-semibold text-foreground mt-2">AgentBucket</h3>
+        <H3 id="sdks-s3">S3-compatible API</H3>
+        <H4>List buckets</H4>
+        {snippet("s3ListBuckets")}
+        <H4>Upload</H4>
+        {snippet("s3Upload")}
+        <H4>Download</H4>
+        {snippet("s3Download")}
+      </DocSection>
 
-                <div className="space-y-4">
-                  <h4 className="font-medium text-foreground">Upload File</h4>
-                  <CodeBlock code={codeSnippets.agentUpload[activeLanguage]} />
-                </div>
+      <DocSection id="rate-limits" title="Rate limits" description="API request limits per user">
+        <H3 id="rate-limits-requests">Request limits</H3>
+        <div className="my-5 overflow-x-auto rounded-[10px] border border-[var(--line)] bg-[var(--paper-card)]">
+          <table className="w-full text-left text-[14px]">
+            <thead>
+              <tr className="border-b border-[var(--line)] text-[12px] tracking-[0.08em] text-[var(--ink-soft)] uppercase">
+                <th className="px-4 py-2.5 font-medium">Operation</th>
+                <th className="px-4 py-2.5 font-medium">Limit</th>
+                <th className="px-4 py-2.5 font-medium">Window</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--line)]">
+              {[
+                ["File upload", "100", "per minute"],
+                ["General API", "200", "per minute"],
+                ["Share links", "100", "per hour"],
+                ["S3 connection test", "15", "per minute"],
+              ].map(([op, limit, window]) => (
+                <tr key={op}>
+                  <td className="px-4 py-2.5 text-[var(--ink)]">{op}</td>
+                  <td className="px-4 py-2.5 font-mono text-[13px] tabular-nums">{limit}</td>
+                  <td className="px-4 py-2.5 text-[var(--ink-soft)]">{window}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-                <div className="space-y-4">
-                  <h4 className="font-medium text-foreground">List Files</h4>
-                  <CodeBlock code={codeSnippets.agentList[activeLanguage]} />
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="font-medium text-foreground">Download File</h4>
-                  <CodeBlock code={codeSnippets.agentDownload[activeLanguage]} />
-                </div>
-
-                <h3 className="text-lg font-semibold text-foreground mt-4">S3-Compatible API</h3>
-
-                <div className="space-y-4">
-                  <h4 className="font-medium text-foreground">List Buckets</h4>
-                  <CodeBlock code={codeSnippets.s3ListBuckets[activeLanguage]} />
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="font-medium text-foreground">Upload</h4>
-                  <CodeBlock code={codeSnippets.s3Upload[activeLanguage]} />
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="font-medium text-foreground">Download</h4>
-                  <CodeBlock code={codeSnippets.s3Download[activeLanguage]} />
-                </div>
-              </div>
-            </div>
-          </Section>
-
-          {/* Rate Limits */}
-          <Section
-            id="rate-limits"
-            icon={<Zap className="w-5 h-5 text-primary" />}
-            title="Rate Limits"
-            description="API request limits per user"
-            markdown={sectionMarkdown["rate-limits"]}
-          >
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Request Limits</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border">
-                        <th className="text-left py-2 px-3">Operation</th>
-                        <th className="text-left py-2 px-3">Limit</th>
-                        <th className="text-left py-2 px-3">Window</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-muted-foreground">
-                      <tr className="border-b border-border"><td className="py-2 px-3">File Upload</td><td className="py-2 px-3">100</td><td className="py-2 px-3">per minute</td></tr>
-                      <tr className="border-b border-border"><td className="py-2 px-3">General API</td><td className="py-2 px-3">200</td><td className="py-2 px-3">per minute</td></tr>
-                      <tr className="border-b border-border"><td className="py-2 px-3">Share Links</td><td className="py-2 px-3">100</td><td className="py-2 px-3">per hour</td></tr>
-                      <tr className="border-b border-border"><td className="py-2 px-3">S3 Connection Test</td><td className="py-2 px-3">15</td><td className="py-2 px-3">per minute</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-foreground">Handling 429 Responses</h3>
-                <p className="text-sm text-muted-foreground">
-                  When rate limited, the response includes headers to help you retry:
-                </p>
-                <CodeBlock
-                  code={`X-RateLimit-Limit: 100        # max requests allowed
+        <H3 id="rate-limits-429">Handling 429 responses</H3>
+        <P>When a request is rate limited, the response carries headers that tell you when to retry:</P>
+        <CodeBlock
+          code={`X-RateLimit-Limit: 100        # max requests allowed
 X-RateLimit-Remaining: 0      # requests remaining
 X-RateLimit-Reset: 1713024060 # Unix timestamp when limit resets`}
-                />
-                <ul className="space-y-2 text-sm text-muted-foreground mt-3">
-                  <li className="flex gap-2"><ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" /><span>Implement exponential backoff — wait for the reset timestamp before retrying</span></li>
-                  <li className="flex gap-2"><ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" /><span>Cache file listings to reduce API calls</span></li>
-                  <li className="flex gap-2"><ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" /><span>Store API keys server-side — never expose them in client code</span></li>
-                </ul>
-              </div>
-            </div>
-          </Section>
-        </main>
-      </div>
-    </div>
+        />
+        <Bullets
+          items={[
+            "Back off exponentially, and wait for the reset timestamp before retrying",
+            "Cache file listings to reduce API calls",
+            "Keep API keys on the server, never in client code",
+          ]}
+        />
+      </DocSection>
+    </DocsLayout>
   );
 }
 

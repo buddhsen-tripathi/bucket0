@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Bucket0 AgentBucket API",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "description": "REST API for AI agents and CLI tools to upload, download, list, share, and search files in AgentBucket. Authenticate with Bearer API keys (prefix b0ak_). Create keys in the Bucket0 dashboard after signing in.",
     "contact": {
       "name": "Bucket0",
@@ -67,6 +67,11 @@
                   "filename": {
                     "type": "string",
                     "description": "Optional relative key path, e.g. research/results.json"
+                  },
+                  "index": {
+                    "type": "string",
+                    "default": "true",
+                    "description": "Memory indexing for this file on plans with memory search (Starter and up). Send false, 0, no or off to skip. Only text files up to 1 MB are indexed."
                   }
                 }
               }
@@ -91,8 +96,13 @@
               }
             }
           },
+          "400": { "description": "Missing file, invalid file path, or invalid destination folder on this API key", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
           "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
-          "402": { "description": "Quota or plan limit", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "402": { "description": "Quota, plan limit, or file size exceeded", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "404": { "description": "User not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "409": { "description": "A file already exists at this path", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "429": { "description": "Rate limit exceeded (100 uploads per minute)", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }, "headers": { "X-RateLimit-Limit": { "schema": { "type": "integer" } }, "X-RateLimit-Remaining": { "schema": { "type": "integer" } }, "X-RateLimit-Reset": { "schema": { "type": "integer" }, "description": "Unix timestamp when the limit resets" } } },
+          "500": { "description": "Upload failed", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         }
       }
     },
@@ -227,6 +237,7 @@
     "/files/share": {
       "post": {
         "summary": "Create a public share/stream link",
+        "description": "Creates a public link (anyone with the link) for a file in Agent Storage. Files written by a key with the My Drive destination are not eligible and return 404. If an active link already exists for the key, it is returned. streamUrl supports HTTP Range requests.",
         "operationId": "shareFile",
         "requestBody": {
           "required": true,
@@ -236,8 +247,8 @@
                 "type": "object",
                 "required": ["key"],
                 "properties": {
-                  "key": { "type": "string" },
-                  "allowDownload": { "type": "boolean", "default": true }
+                  "key": { "type": "string", "description": "Relative file key, e.g. videos/demo.mp4. Must not contain '..' or end with '/'." },
+                  "allowDownload": { "type": "boolean", "default": true, "description": "Let viewers download the file. Set false for view-only." }
                 }
               }
             }
@@ -253,19 +264,25 @@
                   "properties": {
                     "success": { "type": "boolean" },
                     "linkId": { "type": "string" },
-                    "shareUrl": { "type": "string", "format": "uri" },
-                    "streamUrl": { "type": "string", "format": "uri" }
+                    "shareUrl": { "type": "string", "format": "uri", "description": "Viewer page, https://bucket0.com/s/{linkId}" },
+                    "streamUrl": { "type": "string", "format": "uri", "description": "Direct stream, https://bucket0.com/api/cloud/share/stream?id={linkId}" }
                   }
                 }
               }
             }
-          }
+          },
+          "400": { "description": "Valid file key required", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "404": { "description": "Agent file not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "429": { "description": "Rate limit exceeded (100 share links per hour)", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } }, "headers": { "X-RateLimit-Limit": { "schema": { "type": "integer" } }, "X-RateLimit-Remaining": { "schema": { "type": "integer" } }, "X-RateLimit-Reset": { "schema": { "type": "integer" }, "description": "Unix timestamp when the limit resets" } } },
+          "500": { "description": "Failed to create share link", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         }
       }
     },
     "/memory/search": {
       "post": {
-        "summary": "Semantic memory search (Pro+)",
+        "summary": "Semantic memory search (Starter and up)",
+        "description": "Searches indexed text from your AgentBucket files by meaning. Available on Starter, Pro and Scale. Text files up to 1 MB are indexed after upload, in 1,000-character chunks.",
         "operationId": "searchMemory",
         "requestBody": {
           "required": true,
@@ -275,8 +292,8 @@
                 "type": "object",
                 "required": ["query"],
                 "properties": {
-                  "query": { "type": "string" },
-                  "topK": { "type": "integer", "default": 8 }
+                  "query": { "type": "string", "description": "Natural-language description of what to find" },
+                  "topK": { "type": "integer", "default": 8, "minimum": 1, "maximum": 50, "description": "Number of results. Values outside 1-50 are clamped." }
                 }
               }
             }
@@ -290,14 +307,29 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "results": { "type": "array", "items": { "type": "object" } }
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fileName": { "type": "string" },
+                          "key": { "type": "string", "description": "Relative file key" },
+                          "chunkIndex": { "type": "integer" },
+                          "snippet": { "type": "string" },
+                          "score": { "type": "number", "description": "Cosine similarity; higher is closer" }
+                        }
+                      }
+                    }
                   }
                 }
               }
             }
           },
-          "402": { "description": "Plan upgrade required" },
-          "503": { "description": "Memory search unavailable" }
+          "400": { "description": "query is required", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "description": "Unauthorized", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "402": { "description": "Memory search is not included in your plan", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "500": { "description": "Failed to search memory", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "503": { "description": "Memory search is not available", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         }
       }
     }

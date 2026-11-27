@@ -1,66 +1,48 @@
-
 import Link from "@/web/compat/link";
-import { motion } from "framer-motion";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { faqCategories } from "@/lib/shared/faq-data";
+import { container, eyebrow, sectionTitle, textLink } from "@/components/site/styles";
+import { cn } from "@/lib/shared/utils";
 
 export default function FAQ() {
   return (
-    <section className="py-24 px-6 bg-background" id="faq">
-      <div className="max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="grid gap-12 lg:grid-cols-2 mb-12"
-        >
-          <div className="space-y-4">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
-              Got Questions?
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed">
-              If you can&apos;t find what you&apos;re looking for,{" "}
-              <Link href="/contact" className="text-primary hover:underline underline-offset-4">
-                get in touch
-              </Link>
-              .
-            </p>
+    <section
+      id="faq"
+      aria-labelledby="faq-heading"
+      className={cn(container, "scroll-mt-20 grid gap-10 pt-24 md:pt-32 lg:grid-cols-[5fr_7fr] lg:gap-20")}
+    >
+      <div>
+        <p className={eyebrow}>Questions</p>
+        <h2 id="faq-heading" className={cn(sectionTitle, "mt-4")}>
+          Common questions
+        </h2>
+        <p className="mt-5 max-w-sm text-[16px] leading-relaxed text-[var(--ink-soft)]">
+          Can&apos;t find an answer?{" "}
+          <Link href="/contact" className={cn(textLink, "text-[var(--ink)]")}>
+            Get in touch
+          </Link>
+          .
+        </p>
+      </div>
+      <div className="space-y-10">
+        {faqCategories.map((category) => (
+          <div key={category.title}>
+            <h3 className="font-mono text-[11px] tracking-[0.14em] text-[var(--ink-soft)] uppercase">{category.title}</h3>
+            <div className="mt-3 border-t border-[var(--line)]">
+              {category.questions.map((item) => (
+                <details key={item.question} className="group border-b border-[var(--line)]">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-[16.5px] font-medium outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--ink)] [&::-webkit-details-marker]:hidden">
+                    {item.question}
+                    <span aria-hidden className="relative size-3.5 shrink-0">
+                      <span className="absolute inset-x-0 top-1/2 h-px bg-current" />
+                      <span className="absolute inset-y-0 left-1/2 w-px bg-current transition-transform group-open:rotate-90" />
+                    </span>
+                  </summary>
+                  <p className="max-w-2xl pr-8 pb-5 text-[15px] leading-relaxed text-[var(--ink-soft)]">{item.answer}</p>
+                </details>
+              ))}
+            </div>
           </div>
-
-          <div className="grid gap-6">
-            {faqCategories.map((category, categoryIndex) => (
-              <motion.div
-                key={category.title}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: categoryIndex * 0.1 }}
-              >
-                <h3 className="text-muted-foreground border-b border-border py-3 font-semibold mb-3">
-                  {category.title}
-                </h3>
-                <Accordion type="single" collapsible className="w-full">
-                  {category.questions.map((item, i) => (
-                    <AccordionItem key={i} value={`${categoryIndex}-${i}`}>
-                      <AccordionTrigger className="text-foreground hover:text-foreground/80">
-                        {item.question}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground">
-                        {item.answer}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        ))}
       </div>
     </section>
   );

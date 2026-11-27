@@ -159,10 +159,10 @@ export default function SignUpPage() {
   };
 
   const getStrengthColor = () => {
-    if (passwordStrength <= 1) return "bg-red-500";
-    if (passwordStrength === 2) return "bg-yellow-500";
-    if (passwordStrength === 3) return "bg-blue-500";
-    return "bg-green-500";
+    if (passwordStrength <= 1) return "bg-destructive";
+    if (passwordStrength === 2) return "bg-warning";
+    if (passwordStrength === 3) return "bg-primary";
+    return "bg-success";
   };
 
   const getStrengthText = () => {
@@ -378,7 +378,7 @@ export default function SignUpPage() {
                       />
                     ))}
                   </div>
-                  <p className={`text-xs ${passwordStrength <= 1 ? "text-red-500" : passwordStrength === 2 ? "text-yellow-500" : passwordStrength === 3 ? "text-blue-500" : "text-green-500"}`}>
+                  <p className={`text-xs ${passwordStrength <= 1 ? "text-destructive" : passwordStrength === 2 ? "text-warning" : passwordStrength === 3 ? "text-primary" : "text-success"}`}>
                     {getStrengthText()}
                   </p>
                 </div>

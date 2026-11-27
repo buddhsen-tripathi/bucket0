@@ -102,7 +102,7 @@ export default function UploadProgress({ uploads, onClose, onCancel, onRetry, on
                   <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                 )}
                 {upload.status === "success" && (
-                  <MdOutlineCheckCircle size={20} className="text-emerald-500" />
+                  <MdOutlineCheckCircle size={20} className="text-success" />
                 )}
                 {upload.status === "error" && (
                   <MdOutlineError size={20} className="text-destructive" />
@@ -131,7 +131,7 @@ export default function UploadProgress({ uploads, onClose, onCancel, onRetry, on
                 )}
                 
                 {upload.status === "success" && (
-                  <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
+                  <p className="text-xs text-success dark:text-success mt-1">
                     Upload complete
                   </p>
                 )}

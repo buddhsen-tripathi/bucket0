@@ -161,8 +161,8 @@ export default function FeedbackButton({ hideButton, externalOpen, onClose }: Fe
             {/* Success State */}
             {isSuccess ? (
               <div className="p-8 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/10 flex items-center justify-center">
-                  <Check className="w-8 h-8 text-green-500" />
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-success/10 flex items-center justify-center">
+                  <Check className="w-8 h-8 text-success" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">Thank you!</h3>
                 <p className="text-muted-foreground">Your feedback has been submitted successfully.</p>

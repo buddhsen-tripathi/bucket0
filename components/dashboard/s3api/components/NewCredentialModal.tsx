@@ -29,8 +29,8 @@ export function NewCredentialModal({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card border border-border rounded shadow-xl max-w-lg w-full p-6">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
-            <MdOutlineCheck className="text-green-500" size={24} />
+          <div className="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center">
+            <MdOutlineCheck className="text-success" size={24} />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-foreground">Access Key Created</h3>
@@ -38,10 +38,10 @@ export function NewCredentialModal({
           </div>
         </div>
 
-        <div className="bg-amber-500/10 border border-amber-500/20 rounded-sm p-3 mb-4">
+        <div className="bg-warning/10 border border-warning/20 rounded-sm p-3 mb-4">
           <div className="flex items-start gap-2">
-            <MdOutlineWarning className="text-amber-500 mt-0.5" size={18} />
-            <p className="text-sm text-amber-700 dark:text-amber-400">
+            <MdOutlineWarning className="text-warning mt-0.5" size={18} />
+            <p className="text-sm text-warning dark:text-warning">
               Save your secret access key now. You won&apos;t be able to see it again.
             </p>
           </div>
@@ -59,7 +59,7 @@ export function NewCredentialModal({
                 className="p-2 text-muted-foreground hover:text-foreground border border-border rounded-sm"
               >
                 {copiedField === "newAccessKeyId" ? (
-                  <MdOutlineCheck size={16} className="text-green-500" />
+                  <MdOutlineCheck size={16} className="text-success" />
                 ) : (
                   <MdOutlineContentCopy size={16} />
                 )}
@@ -84,7 +84,7 @@ export function NewCredentialModal({
                 className="p-2 text-muted-foreground hover:text-foreground border border-border rounded-sm"
               >
                 {copiedField === "newSecretKey" ? (
-                  <MdOutlineCheck size={16} className="text-green-500" />
+                  <MdOutlineCheck size={16} className="text-success" />
                 ) : (
                   <MdOutlineContentCopy size={16} />
                 )}

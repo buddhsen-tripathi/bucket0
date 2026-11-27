@@ -156,8 +156,8 @@ export default function FileListTable({
                         onClick={() => onStar(item.key, !isStarred)}
                         className={`rounded transition-colors ${
                           isStarred
-                            ? "text-yellow-500 hover:text-yellow-600"
-                            : "text-muted-foreground/40 hover:text-yellow-500"
+                            ? "text-warning hover:text-warning"
+                            : "text-muted-foreground/40 hover:text-warning"
                         }`}
                         title={isStarred ? "Remove from starred" : "Add to starred"}
                       >

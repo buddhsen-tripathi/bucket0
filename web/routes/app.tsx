@@ -1,24 +1,12 @@
-
-import { motion } from "framer-motion";
-import {
-  Cloud,
-  Upload,
-  Bell,
-  Bot,
-  HardDrive,
-  Search,
-  Home,
-  Users,
-  Plus,
-  Settings,
-  ArrowRight,
-  Folder,
-  Image,
-  FileText,
-  Film,
-} from "lucide-react";
+import type { CSSProperties } from "react";
+import { Bell } from "lucide-react";
 import { AiFillApple } from "react-icons/ai";
-import { DashedLine } from "@/components/ui/dashed-line";
+import { BucketsPhone, DrivePhone, UploadPhone } from "@/components/app-page/Phones";
+import { ArrowRightIcon, DatabaseIcon, SparkleAi01Icon, UploadUpIcon } from "@/components/icons";
+import { BrushPanel } from "@/components/site/BrushPanel";
+import { SectionHead } from "@/components/site/SectionHead";
+import { button, container, eyebrow } from "@/components/site/styles";
+import { useTheme } from "@/components/ThemeProvider";
 import { cn } from "@/lib/shared/utils";
 import { nextMeta } from "@/web/compat/meta";
 import { constructMetadata } from "@/lib/shared/seo";
@@ -26,360 +14,130 @@ import { constructMetadata } from "@/lib/shared/seo";
 const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.bucket0";
 
-const appFeatures = [
-  {
-    title: "Unified storage.",
-    description:
-      "Manage all your cloud buckets from one app. AWS S3, Cloudflare R2, and more.",
-    icon: Cloud,
-    highlight: true,
-  },
-  {
-    title: "Upload from device.",
-    description:
-      "Capture and upload photos, videos, and documents directly from your phone.",
-    icon: Upload,
-  },
-];
+const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties;
 
-const moreFeatures = [
+const FEATURES = [
   {
-    title: "Push notifications.",
-    description:
-      "Team activity, shared files, and storage alerts. Always in the loop.",
+    icon: DatabaseIcon,
+    title: "Every bucket in one list",
+    body: "Your Bucket0 storage sits next to the buckets you connect from AWS S3, Cloudflare R2, DigitalOcean, Backblaze and other S3-compatible providers.",
+  },
+  {
+    icon: UploadUpIcon,
+    title: "Upload from your phone",
+    body: "Take a photo, record a video or pick a document and upload it straight from your device.",
+  },
+  {
     icon: Bell,
+    title: "Push notifications",
+    body: "Team activity, shared files and storage alerts arrive on your phone, so you know when something changes.",
   },
   {
-    title: "AgentBucket.",
-    description:
-      "Persistent file storage for AI agents. Manage files programmatically with simple API access.",
-    icon: Bot,
-  },
-  {
-    title: "External buckets.",
-    description:
-      "Connect your own S3-compatible storage. AWS, DigitalOcean, Backblaze, and more.",
-    icon: HardDrive,
+    icon: SparkleAi01Icon,
+    title: "AgentBucket included",
+    body: "The same account gives your AI agents persistent file storage they reach through a simple API.",
   },
 ];
 
-const mockFiles = [
-  { name: "Documents", icon: Folder, meta: "12 items", color: "text-primary", bg: "bg-primary/10" },
-  { name: "vacation-photos", icon: Image, meta: "48 items", color: "text-emerald-500", bg: "bg-emerald-500/10" },
-  { name: "Q4-report.pdf", icon: FileText, meta: "2.4 MB", color: "text-red-500", bg: "bg-red-500/10" },
-  { name: "product-demo.mp4", icon: Film, meta: "128 MB", color: "text-violet-500", bg: "bg-violet-500/10" },
-  { name: "design-assets", icon: Folder, meta: "24 items", color: "text-primary", bg: "bg-primary/10" },
-];
-
-export default function DownloadAppPage() {
+function PlayButton({ tone = "solid" }: { tone?: "solid" | "light" }) {
   return (
-    <main className="pt-28 lg:pt-36 min-h-screen bg-background">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Hero - Side by side on desktop */}
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 mb-20 lg:mb-28">
-          {/* Text content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex-1 text-center lg:text-left"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-sm font-medium text-emerald-400">
-                Now on Google Play
-              </span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 tracking-tight">
-              Your cloud storage,
-              <br className="hidden sm:block" /> always with you
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-10">
-              Access your files, manage buckets, and collaborate with your
-              team. All from your phone. Available now on Android.
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 lg:flex-nowrap">
-              <a
-                href={PLAY_STORE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-medium rounded hover:bg-primary/90 transition-all duration-200 shadow-lg shadow-primary/25 min-w-[160px]"
-              >
-                Get it on Google Play
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-              </a>
-
-              <div className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-foreground font-medium rounded min-w-[160px]">
-                <AiFillApple className="w-4 h-4" />
-                iOS coming soon
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Phone mockup */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="flex-shrink-0"
-          >
-            <div className="w-[260px] sm:w-[280px] rounded-[2.5rem] border-[6px] border-foreground/15 bg-card shadow-2xl overflow-hidden">
-              {/* Status bar */}
-              <div className="flex items-center justify-between px-5 pt-3 pb-1">
-                <span className="text-[9px] font-semibold text-foreground/70">
-                  9:41
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <div className="flex items-end gap-[1.5px]">
-                    {[4, 6, 8, 10].map((h, i) => (
-                      <div
-                        key={i}
-                        className="w-[2px] rounded-full bg-foreground/60"
-                        style={{ height: h }}
-                      />
-                    ))}
-                  </div>
-                  <div className="w-4 h-[7px] rounded-sm border border-foreground/40 p-[1px]">
-                    <div className="h-full w-3/4 bg-foreground/60 rounded-[1px]" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="px-4 pb-2">
-                {/* Nav bar */}
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold text-foreground tracking-tight">
-                    My Files
-                  </span>
-                  <div className="w-5 h-5 rounded-full bg-primary/15 flex items-center justify-center">
-                    <span className="text-[8px] font-bold text-primary">
-                      B
-                    </span>
-                  </div>
-                </div>
-
-                {/* Search */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 mb-3"
-                >
-                  <Search className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-[10px] text-muted-foreground">
-                    Search files...
-                  </span>
-                </motion.div>
-
-                {/* Storage bar */}
-                <div className="mb-3 p-2.5 rounded-xl bg-muted/60">
-                  <div className="flex justify-between text-[10px] mb-1.5">
-                    <span className="text-muted-foreground">Storage</span>
-                    <span className="text-foreground font-medium">
-                      4.2 / 10 GB
-                    </span>
-                  </div>
-                  <div className="h-1 bg-background rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: "42%" }}
-                      transition={{
-                        duration: 1,
-                        delay: 0.8,
-                        ease: "easeOut",
-                      }}
-                      className="h-full bg-primary rounded-full"
-                    />
-                  </div>
-                </div>
-
-                {/* File list */}
-                <div className="space-y-0.5">
-                  {mockFiles.map((file, i) => {
-                    const Icon = file.icon;
-                    return (
-                      <motion.div
-                        key={file.name}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.6 + i * 0.08 }}
-                        className="flex items-center gap-2.5 p-2 rounded-lg"
-                      >
-                        <div
-                          className={cn(
-                            "w-7 h-7 rounded-lg flex items-center justify-center shrink-0",
-                            file.bg
-                          )}
-                        >
-                          <Icon className={cn("w-3.5 h-3.5", file.color)} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="text-[11px] font-medium text-foreground truncate">
-                            {file.name}
-                          </div>
-                          <div className="text-[9px] text-muted-foreground">
-                            {file.meta}
-                          </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Bottom tab bar */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2 }}
-                className="flex items-center justify-around px-4 py-2 border-t border-border/30"
-              >
-                <div className="flex flex-col items-center gap-1">
-                  <Home className="w-4 h-4 text-primary" />
-                  <div className="w-1 h-1 rounded-full bg-primary" />
-                </div>
-                <Cloud className="w-4 h-4 text-muted-foreground" />
-                <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center -mt-2 shadow-md shadow-primary/30">
-                  <Plus className="w-3.5 h-3.5 text-primary-foreground" />
-                </div>
-                <div className="relative">
-                  <Users className="w-4 h-4 text-muted-foreground" />
-                  <div className="absolute -top-1.5 -right-2 w-3 h-3 rounded-full bg-red-500 flex items-center justify-center">
-                    <span className="text-[6px] text-white font-bold">3</span>
-                  </div>
-                </div>
-                <Settings className="w-4 h-4 text-muted-foreground" />
-              </motion.div>
-
-              {/* Home indicator */}
-              <div className="flex justify-center pb-2.5 pt-1">
-                <div className="w-24 h-1 bg-foreground/20 rounded-full" />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Features Grid */}
-        <section className="py-8">
-          <DashedLine orientation="horizontal" />
-
-          <div className="relative flex max-md:flex-col">
-            {appFeatures.map((item, i) => (
-              <FeatureItem
-                key={item.title}
-                item={item}
-                index={i}
-                isLast={i === appFeatures.length - 1}
-              />
-            ))}
-          </div>
-
-          <DashedLine orientation="horizontal" />
-
-          <div className="relative grid max-md:grid-cols-1 md:grid-cols-3 pb-2 md:pb-4">
-            {moreFeatures.map((item, i) => (
-              <FeatureItem
-                key={item.title}
-                item={item}
-                index={i}
-                isLast={i === moreFeatures.length - 1}
-              />
-            ))}
-          </div>
-
-          <DashedLine orientation="horizontal" />
-        </section>
-
-        {/* Bottom CTA */}
-        <section className="py-16 lg:py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 tracking-tight">
-              Ready to go mobile?
-            </h2>
-            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              Download Bucket0 on Android and take your files everywhere.
-            </p>
-            <a
-              href={PLAY_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-medium rounded hover:bg-primary/90 transition-all duration-200 shadow-lg shadow-primary/25 min-w-[160px]"
-            >
-              Get it on Google Play
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </a>
-          </motion.div>
-        </section>
-      </div>
-    </main>
+    <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer" className={cn(button[tone], "group")}>
+      Get it on Google Play
+      <ArrowRightIcon aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+    </a>
   );
 }
 
-interface FeatureItemProps {
-  item: {
-    title: string;
-    description: string;
-    icon: React.ComponentType<{ className?: string }>;
-    highlight?: boolean;
-  };
-  index: number;
-  isLast?: boolean;
-  className?: string;
-}
-
-function FeatureItem({ item, index, isLast, className }: FeatureItemProps) {
-  const Icon = item.icon;
-
+function IosNote({ dark = false }: { dark?: boolean }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
+    <span
       className={cn(
-        "relative flex-1 flex flex-col gap-4 px-0 py-6 md:px-6 md:py-8",
-        className
+        "inline-flex items-center gap-2 rounded-[3px] px-4 py-2.5 text-[14px] ring-1",
+        dark ? "text-white/70 ring-white/25" : "text-[var(--ink-soft)] ring-[var(--line)]"
       )}
     >
-      <div
-        className={cn(
-          "w-12 h-12 rounded-xl flex items-center justify-center",
-          item.highlight ? "bg-primary/10" : "bg-muted"
-        )}
-      >
-        <Icon
-          className={cn(
-            "w-6 h-6",
-            item.highlight ? "text-primary" : "text-foreground"
-          )}
-        />
-      </div>
+      <AiFillApple aria-hidden className="size-4" />
+      iOS coming soon
+    </span>
+  );
+}
 
-      <div>
-        <h3 className="inline font-semibold text-foreground">{item.title} </h3>
-        <span className="text-muted-foreground">{item.description}</span>
-      </div>
+export default function DownloadAppPage() {
+  const { resolvedTheme } = useTheme();
+  return (
+    <main>
+      <section className={cn(container, "pt-14 pb-20 md:pt-24 md:pb-24")}>
+        <div className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:gap-16">
+          <div>
+            <p className={cn(eyebrow, "rise inline-flex items-center gap-2")}>
+              <span className="size-1.5 rounded-full bg-[var(--violet)]" />
+              Now on Google Play
+            </p>
+            <h1 className="display rise mt-5 text-balance text-[clamp(46px,5.8vw,88px)] leading-[0.96]" style={delay(60)}>
+              Your cloud storage, always with you
+            </h1>
+          </div>
+          <div className="rise flex flex-col justify-end lg:pb-2" style={delay(300)}>
+            <p className="max-w-[560px] text-[19px] leading-[1.45] text-[var(--ink)]/85 md:text-[21px]">
+              Open your files, manage your buckets and keep up with your team from your phone. Available now on
+              Android.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <PlayButton />
+              <IosNote />
+            </div>
+          </div>
+        </div>
 
-      {!isLast && (
-        <>
-          <DashedLine
-            orientation="vertical"
-            className="absolute top-0 right-0 max-md:hidden"
-          />
-          <DashedLine
-            orientation="horizontal"
-            className="absolute inset-x-0 bottom-0 md:hidden"
-          />
-        </>
-      )}
-    </motion.div>
+        <div className="rise mt-14 md:mt-20" style={delay(420)}>
+          <BrushPanel
+            id="app-hero"
+            tone={resolvedTheme === "dark" ? "night" : "lilac"}
+            className="rounded-[14px] max-md:!bg-transparent max-md:after:!hidden max-md:[&>svg]:hidden"
+          >
+            <div aria-hidden inert className="flex items-start justify-center gap-6 md:h-[560px] md:px-8 md:pt-14 lg:gap-12">
+              <BucketsPhone className="max-lg:hidden lg:mt-20" />
+              <DrivePhone />
+              <UploadPhone className="max-md:hidden md:mt-20" />
+            </div>
+          </BrushPanel>
+        </div>
+      </section>
+
+      <section aria-labelledby="app-features-heading" className={cn(container, "pt-16 md:pt-32")}>
+        <SectionHead id="app-features-heading" label="On your phone" title="The same account, in your pocket">
+          <p>Sign in with your Bucket0 account and your drive, connected buckets and teams are there.</p>
+        </SectionHead>
+        <ul className="mt-12 grid gap-px overflow-hidden rounded-[12px] bg-[var(--line)] ring-1 ring-[var(--line)] sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">
+          {FEATURES.map(({ icon: Icon, title, body }) => (
+            <li key={title} className="bg-[var(--paper-card)] p-6 md:p-7">
+              <span className="grid size-9 place-items-center rounded-[8px] bg-[var(--violet-soft)] text-[var(--violet)]">
+                <Icon aria-hidden className="size-[18px]" strokeWidth={2} />
+              </span>
+              <h3 className="mt-6 text-[16px] font-medium">{title}</h3>
+              <p className="mt-2 text-[14.5px] leading-relaxed text-[var(--ink-soft)]">{body}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className={cn(container, "pt-24 pb-8 md:pt-32")}>
+        <BrushPanel id="app-closing" tone="night" className="reveal rounded-[14px] text-white">
+          <div className="flex min-h-[280px] flex-col items-start justify-end gap-8 p-8 md:p-14 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h2 className="display max-w-2xl text-balance text-[clamp(34px,4.6vw,60px)] leading-[1.02]">Take your files with you</h2>
+              <p className="mt-4 max-w-md text-[16px] leading-relaxed text-white/70">
+                Download Bucket0 on Android and take your files everywhere.
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-3">
+              <PlayButton tone="light" />
+              <IosNote dark />
+            </div>
+          </div>
+        </BrushPanel>
+      </section>
+    </main>
   );
 }
 

@@ -10,6 +10,7 @@ export async function GET() {
 
   const urls = [
     baseUrl,
+    `${baseUrl}/agentbucket`,
     `${baseUrl}/pricing`,
     `${baseUrl}/tools`,
     `${baseUrl}/docs`,

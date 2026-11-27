@@ -348,7 +348,7 @@ export default function TeamsView({
                     <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
                       {team.isOwner && (
                         <>
-                          <Crown size={12} className="text-amber-500" />
+                          <Crown size={12} className="text-warning" />
                           <span>Owner</span>
                         </>
                       )}

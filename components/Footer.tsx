@@ -1,8 +1,8 @@
 
 import Link from "@/web/compat/link";
-import { ArrowUpRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut } from "@/components/clerk-compat";
+import { Logo } from "@/components/Logo";
+import { container, GITHUB_URL } from "@/components/site/styles";
+import { cn } from "@/lib/shared/utils";
 import { SiClaude, SiPerplexity } from "react-icons/si";
 import { AiOutlineOpenAI } from "react-icons/ai";
 
@@ -59,163 +59,98 @@ const llmProviders = [
     },
 ];
 
-const navigation = [
-    { name: "Features", href: "/#features" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "App", href: "/app" },
-];
-
-const social = [
-    { name: "GitHub", href: "https://github.com/bucket0-com" },
-    { name: "X", href: "https://x.com/bucket0dotcom" },
-    { name: "LinkedIn", href: "https://www.linkedin.com/company/bucket0" },
-];
-
-const legal = [
-    { name: "Privacy Policy", href: "/privacy" },
-    { name: "Terms of Service", href: "/terms" },
-    { name: "Changelog", href: "/changelog" },
-    { name: "Contact", href: "/contact" }
+const columns = [
+    {
+        title: "Product",
+        links: [
+            { name: "AgentBucket", href: "/agentbucket" },
+            { name: "Pricing", href: "/pricing" },
+            { name: "Docs", href: "/docs" },
+            { name: "Free tools", href: "/tools" },
+            { name: "App", href: "/app" },
+        ],
+    },
+    {
+        title: "Company",
+        links: [
+            { name: "Changelog", href: "/changelog" },
+            { name: "Contact", href: "/contact" },
+            { name: "Privacy Policy", href: "/privacy" },
+            { name: "Terms of Service", href: "/terms" },
+        ],
+    },
+    {
+        title: "Elsewhere",
+        links: [
+            { name: "GitHub", href: GITHUB_URL, external: true },
+            { name: "X", href: "https://x.com/bucket0dotcom", external: true },
+            { name: "LinkedIn", href: "https://www.linkedin.com/company/bucket0", external: true },
+        ],
+    },
 ];
 
 export default function Footer() {
     return (
-        <footer className="flex flex-col items-center gap-14 pt-12 lg:pt-20">
-            <div className="max-w-6xl mx-auto px-6 space-y-4 text-center">
-                <h2 className="text-2xl tracking-tight md:text-4xl lg:text-5xl font-bold text-foreground">
-                    Start managing your storage today
-                </h2>
-                <p className="text-muted-foreground mx-auto max-w-xl leading-snug text-balance">
-                    Upload files, connect your buckets, use S3-compatible tools, or let AI agents save work into AgentBucket.
-                </p>
-                <div>
-                    <SignedOut>
-                        <Button size="lg" className="mt-4 rounded" asChild>
-                            <Link href="/sign-up">
-                                Get started free
-                            </Link>
-                        </Button>
-                    </SignedOut>
-                    <SignedIn>
-                        <Button size="lg" className="mt-4 rounded" asChild>
-                            <Link href="/dashboard">
-                                Go to Dashboard
-                            </Link>
-                        </Button>
-                    </SignedIn>
-                </div>
-            </div>
-
-            <div className="flex flex-col items-center gap-2 mt-4">
-                <p className="text-muted-foreground/80 text-sm italic">
-                    Request an AI summary of Bucket0
-                </p>
-                <div className="flex items-center gap-4">
-                    {llmProviders.map((provider) => (
-                        <a
-                            key={provider.name}
-                            href={provider.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title={`Ask ${provider.name}`}
-                            className="text-muted-foreground/70 transition-colors hover:text-foreground"
-                        >
-                            {provider.icon}
-                        </a>
-                    ))}
-                </div>
-            </div>
-
-            <nav className="max-w-6xl mx-auto px-6 flex flex-col items-center gap-4">
-                <ul className="flex flex-wrap items-center justify-center gap-6">
-                    {navigation.map((item) => (
-                        <li key={item.name}>
-                            <Link
-                                href={item.href}
-                                className="font-medium text-foreground transition-opacity hover:opacity-75"
-                            >
-                                {item.name}
-                            </Link>
-                        </li>
-                    ))}
-                    {social.map((item) => (
-                        <li key={item.name}>
+        <footer className="mt-16 border-t border-[var(--line)]">
+            <div className={cn(container, "grid gap-12 pt-14 pb-10 md:grid-cols-[minmax(0,1fr)_auto] md:gap-20")}>
+                <div className="max-w-sm">
+                    <Link href="/" className="flex items-center gap-2.5" aria-label="Bucket0 home">
+                        <Logo size={22} />
+                        <span className="text-[16px] font-semibold tracking-[-0.03em]">Bucket0</span>
+                    </Link>
+                    <p className="mt-4 text-[14px] leading-relaxed text-[var(--ink-soft)]">
+                        A file system for AI agents, and an encrypted drive for your own files.
+                    </p>
+                    <p className="mt-8 font-mono text-[11px] tracking-[0.14em] text-[var(--ink-soft)] uppercase">Ask an assistant about Bucket0</p>
+                    <div className="mt-3 flex items-center gap-1">
+                        {llmProviders.map((provider) => (
                             <a
-                                href={item.href}
+                                key={provider.name}
+                                href={provider.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-0.5 font-medium text-foreground transition-opacity hover:opacity-75"
+                                title={`Ask ${provider.name}`}
+                                aria-label={`Ask ${provider.name} about Bucket0`}
+                                className="grid size-9 place-items-center rounded-[4px] text-[var(--ink-soft)] ring-1 ring-[var(--line)] transition-colors hover:text-[var(--ink)] hover:ring-[var(--ink)]"
                             >
-                                {item.name} <ArrowUpRight className="size-4" />
+                                {provider.icon}
                             </a>
-                        </li>
-                    ))}
-                </ul>
-                <ul className="flex flex-wrap items-center justify-center gap-6">
-                    {legal.map((item) => (
-                        <li key={item.name}>
-                            <Link
-                                href={item.href}
-                                className="text-muted-foreground text-sm transition-opacity hover:opacity-75"
-                            >
-                                {item.name}
-                            </Link>
-                        </li>
-                    ))}
-                    <li>
-                        <span className="text-muted-foreground text-sm">
-                            © {new Date().getFullYear()} Bucket0
-                        </span>
-                    </li>
-                </ul>
-            </nav>
-
-            <div className="w-full max-w-7xl mx-auto sm:mt-2 mt-6 space-y-0">
-                <div className="h-px w-full overflow-hidden">
-                    <div
-                        className="h-full w-[200%] animate-[flowBorder_3s_linear_infinite]"
-                        style={{
-                            background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.6), hsl(var(--primary)), hsl(var(--primary) / 0.6), transparent, transparent)",
-                            backgroundSize: "50% 100%",
-                        }}
-                    />
+                        ))}
+                    </div>
                 </div>
-
-                <div className="text-primary w-full overflow-hidden">
-                    <svg
-                        viewBox="0 10 800 140"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-full block"
-                        preserveAspectRatio="xMidYMin meet"
-                    >
-                        <defs>
-                            <linearGradient
-                                id="bucket0-gradient"
-                                x1="400"
-                                y1="10"
-                                x2="400"
-                                y2="140"
-                                gradientUnits="userSpaceOnUse"
-                            >
-                                <stop stopColor="currentColor" />
-                                <stop offset="1" stopColor="currentColor" stopOpacity="0.1" />
-                            </linearGradient>
-                        </defs>
-                        <text
-                            x="400"
-                            y="175"
-                            textAnchor="middle"
-                            className="font-bold"
-                            fill="url(#bucket0-gradient)"
-                            style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontSize: '180px', letterSpacing: '-0.05em' }}
-                            textLength="760"
-                            lengthAdjust="spacing"
-                        >
-                            BUCKET0
-                        </text>
-                    </svg>
+                <nav className="grid grid-cols-2 gap-10 sm:grid-cols-3 sm:gap-16">
+                    {columns.map((col) => (
+                        <div key={col.title}>
+                            <p className="font-mono text-[11px] tracking-[0.14em] text-[var(--ink-soft)] uppercase">{col.title}</p>
+                            <ul className="mt-4 space-y-2.5 text-[14px]">
+                                {col.links.map((item) => (
+                                    <li key={item.name}>
+                                        {"external" in item ? (
+                                            <a href={item.href} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-[var(--violet)]">
+                                                {item.name}
+                                            </a>
+                                        ) : (
+                                            <Link href={item.href} className="transition-colors hover:text-[var(--violet)]">
+                                                {item.name}
+                                            </Link>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </nav>
+            </div>
+            <div className={container}>
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] py-6 text-[13px] text-[var(--ink-soft)]">
+                    <span>© {new Date().getFullYear()} Bucket0</span>
+                    <span className="font-mono text-[12px]">Open source under AGPL-3.0</span>
                 </div>
+            </div>
+            <div aria-hidden className={cn(container, "overflow-hidden")}>
+                <p className="display -mb-[0.22em] select-none text-center text-[clamp(80px,21vw,330px)] leading-[0.8] tracking-[-0.06em] text-[var(--paper-2)]">
+                    Bucket0
+                </p>
             </div>
         </footer>
     );

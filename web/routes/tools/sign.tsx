@@ -565,7 +565,7 @@ export default function SignPage() {
                 Create Signature
               </h3>
               {signatureConfirmed && (
-                <span className="ml-auto flex items-center gap-1 text-xs text-green-600 dark:text-green-400 font-medium">
+                <span className="ml-auto flex items-center gap-1 text-xs text-success dark:text-success font-medium">
                   <Check className="w-3.5 h-3.5" />
                   Confirmed
                 </span>
@@ -816,7 +816,7 @@ export default function SignPage() {
                 />
               </div>
               {signaturePosition && (
-                <p className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+                <p className="text-xs text-success dark:text-success flex items-center gap-1">
                   <Check className="w-3.5 h-3.5" />
                   Signature positioned on page {selectedPage}
                 </p>
@@ -858,7 +858,7 @@ export default function SignPage() {
         {/* Result section */}
         {result && (
           <div className="space-y-4">
-            <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-700 dark:text-green-400 text-sm flex items-center gap-2">
+            <div className="p-3 bg-success/10 border border-success/20 rounded-lg text-success dark:text-success text-sm flex items-center gap-2">
               <Check className="w-4 h-4 shrink-0" />
               Signature applied successfully. Click &quot;Download&quot; to save
               your file.

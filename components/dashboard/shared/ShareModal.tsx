@@ -17,7 +17,7 @@ function Toast({ message, type, onClose }: { message: string; type: "success" | 
 
   return (
     <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-bottom-4 ${
-      type === "success" ? "bg-emerald-600 text-white" : "bg-destructive text-destructive-foreground"
+      type === "success" ? "bg-success text-white" : "bg-destructive text-destructive-foreground"
     }`}>
       {type === "success" ? <Check size={16} /> : <X size={16} />}
       <span className="text-sm font-medium">{message}</span>
@@ -457,7 +457,7 @@ export default function ShareModal({
                   onClick={handleCopyLink}
                   className={`p-2 rounded-sm transition-colors ${
                     copied
-                      ? "bg-emerald-500/10 text-emerald-600"
+                      ? "bg-success/10 text-success"
                       : "bg-muted hover:bg-muted/70 text-foreground"
                   }`}
                   title={copied ? "Copied!" : "Copy link"}

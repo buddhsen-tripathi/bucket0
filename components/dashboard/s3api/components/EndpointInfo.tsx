@@ -23,7 +23,7 @@ export function EndpointInfo({ copiedField, onCopy, variant = "card" }: Endpoint
             className="p-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             {copiedField === "endpoint" ? (
-              <MdOutlineCheck size={16} className="text-green-500" />
+              <MdOutlineCheck size={16} className="text-success" />
             ) : (
               <MdOutlineContentCopy size={16} />
             )}
@@ -45,7 +45,7 @@ export function EndpointInfo({ copiedField, onCopy, variant = "card" }: Endpoint
           className="p-2 text-muted-foreground hover:text-foreground transition-colors border border-border rounded-sm"
         >
           {copiedField === "endpoint" ? (
-            <MdOutlineCheck size={16} className="text-green-500" />
+            <MdOutlineCheck size={16} className="text-success" />
           ) : (
             <MdOutlineContentCopy size={16} />
           )}

@@ -1,0 +1,172 @@
+{
+  "framework": "react-tsx",
+  "dir": "components/icons",
+  "importAlias": "@/components/icons",
+  "variant": "stroke",
+  "icons": {
+    "ai-01": {
+      "name": "ai-01",
+      "variant": "stroke"
+    },
+    "arrow-right": {
+      "name": "arrow-right",
+      "variant": "stroke"
+    },
+    "burger-menu-three": {
+      "name": "burger-menu-three",
+      "variant": "stroke"
+    },
+    "check-tick-circle": {
+      "name": "check-tick-circle",
+      "variant": "stroke"
+    },
+    "chevron-down": {
+      "name": "chevron-down",
+      "variant": "stroke"
+    },
+    "chevron-right": {
+      "name": "chevron-right",
+      "variant": "stroke"
+    },
+    "cloud-default": {
+      "name": "cloud-default",
+      "variant": "stroke"
+    },
+    "code": {
+      "name": "code",
+      "variant": "stroke"
+    },
+    "copy-copied": {
+      "name": "copy-copied",
+      "variant": "stroke"
+    },
+    "copy-default": {
+      "name": "copy-default",
+      "variant": "stroke"
+    },
+    "database": {
+      "name": "database",
+      "variant": "stroke"
+    },
+    "delete-dustbin-01": {
+      "name": "delete-dustbin-01",
+      "variant": "stroke"
+    },
+    "download-down": {
+      "name": "download-down",
+      "variant": "stroke"
+    },
+    "external-link-square": {
+      "name": "external-link-square",
+      "variant": "stroke"
+    },
+    "eye-on": {
+      "name": "eye-on",
+      "variant": "stroke"
+    },
+    "file-default": {
+      "name": "file-default",
+      "variant": "stroke"
+    },
+    "folder-default": {
+      "name": "folder-default",
+      "variant": "stroke"
+    },
+    "github": {
+      "name": "github",
+      "variant": "stroke"
+    },
+    "globe": {
+      "name": "globe",
+      "variant": "stroke"
+    },
+    "key-left": {
+      "name": "key-left",
+      "variant": "stroke"
+    },
+    "layer-three": {
+      "name": "layer-three",
+      "variant": "stroke"
+    },
+    "lightning-thunder-electric-on": {
+      "name": "lightning-thunder-electric-on",
+      "variant": "stroke"
+    },
+    "link-slant": {
+      "name": "link-slant",
+      "variant": "stroke"
+    },
+    "lock-close": {
+      "name": "lock-close",
+      "variant": "stroke"
+    },
+    "log-out-right": {
+      "name": "log-out-right",
+      "variant": "stroke"
+    },
+    "moon": {
+      "name": "moon",
+      "variant": "stroke"
+    },
+    "multiple-cross-cancel-default": {
+      "name": "multiple-cross-cancel-default",
+      "variant": "stroke"
+    },
+    "photo-image-default": {
+      "name": "photo-image-default",
+      "variant": "stroke"
+    },
+    "refresh": {
+      "name": "refresh",
+      "variant": "stroke"
+    },
+    "search-default": {
+      "name": "search-default",
+      "variant": "stroke"
+    },
+    "server": {
+      "name": "server",
+      "variant": "stroke"
+    },
+    "settings-01": {
+      "name": "settings-01",
+      "variant": "stroke"
+    },
+    "shield-check": {
+      "name": "shield-check",
+      "variant": "stroke"
+    },
+    "sidebar-menu": {
+      "name": "sidebar-menu",
+      "variant": "stroke"
+    },
+    "sparkle-ai-01": {
+      "name": "sparkle-ai-01",
+      "variant": "stroke"
+    },
+    "star": {
+      "name": "star",
+      "variant": "stroke"
+    },
+    "sun": {
+      "name": "sun",
+      "variant": "stroke"
+    },
+    "three-dots-menu-horizontal": {
+      "name": "three-dots-menu-horizontal",
+      "variant": "stroke"
+    },
+    "upload-up": {
+      "name": "upload-up",
+      "variant": "stroke"
+    },
+    "user-default": {
+      "name": "user-default",
+      "variant": "stroke"
+    },
+    "user-plus": {
+      "name": "user-plus",
+      "variant": "stroke"
+    }
+  }
+}

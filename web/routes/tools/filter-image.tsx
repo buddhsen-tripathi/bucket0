@@ -296,7 +296,7 @@ export default function FilterImagePage() {
         </div>
 
         {result && (
-          <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-700 dark:text-green-400 text-sm">
+          <div className="p-3 bg-success/10 border border-success/20 rounded-lg text-success dark:text-success text-sm">
             Filters applied successfully. Click &quot;Download&quot; to save.
           </div>
         )}

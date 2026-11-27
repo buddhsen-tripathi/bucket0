@@ -11,7 +11,9 @@ Bucket0 is a cloud storage platform for privacy-conscious users, developers, and
 - AgentBucket REST: https://bucket0.com/api/agent-bucket (Bearer `b0ak_...`)
 - Remote MCP: https://mcp.bucket0.com/mcp
 - Agent registration: https://bucket0.com/auth.md
+- AgentBucket overview: https://bucket0.com/agentbucket (Persistent file storage for AI agents)
 - API docs: https://bucket0.com/docs
+- MCP setup docs: https://bucket0.com/docs#mcp
 - OpenAPI (AgentBucket): https://bucket0.com/openapi/agent-bucket.json
 - OpenAPI (S3): https://bucket0.com/openapi/s3-api.json
 - API catalog: https://bucket0.com/.well-known/api-catalog
@@ -24,9 +26,11 @@ Request `Accept: text/markdown` on `/`, `/docs`, `/pricing`, or `/tools` for mar
 ## Key Features
 
 ### AgentBucket
-- Upload, download, list, delete, and share files with Bearer API keys
-- Remote MCP for Claude Code, Cursor, and other MCP clients
-- Semantic memory search on Pro and Scale plans
+- Upload, download, list, delete, and share files with Bearer API keys (https://bucket0.com/docs#agent-bucket)
+- Share links: `POST /files/share` returns a viewer page URL and a seekable stream URL for an Agent Storage file (https://bucket0.com/docs#agent-bucket-share)
+- Semantic memory search on Starter, Pro and Scale: `POST /memory/search` over indexed text files (https://bucket0.com/docs#agent-bucket-memory)
+- Remote MCP at https://mcp.bucket0.com/mcp with OAuth sign-in, no key to paste. Works with Claude, ChatGPT, Cursor, Claude Code and other MCP clients. Tools: save_file, search_memory, read_file, list_files, delete_file, create_folder, create_streaming_link (https://bucket0.com/docs#mcp)
+- Local stdio MCP package: `npx -y agentbucket` with `BUCKET0_API_KEY`
 - Encrypted at rest (AES-128-GCM)
 
 ### S3-Compatible API
@@ -56,14 +60,15 @@ Browser-based tools — files never leave the device.
 ## Pricing
 
 - **Free**: 5 GB encrypted storage, 1 external bucket, S3 API (1 bucket), AgentBucket, file sharing
-- **Starter**: $7/month (or $5/month annual) - 150 GB, 10 external buckets, S3 API (10 buckets), 1 team with 3 members
-- **Pro**: $19/month (or $15/month annual) - 700 GB, AgentBucket memory, team chat, 5 members
-- **Scale**: $45/month (or $35/month annual) - 2 TB, 2 teams with 10 members each
+- **Starter**: $7/month (or $5/month annual) - 150 GB, 10 external buckets, S3 API (10 buckets), AgentBucket memory (10,000 chunks), 1 team with 3 members
+- **Pro**: $19/month (or $15/month annual) - 700 GB, AgentBucket memory (50,000 chunks), team chat, 5 members
+- **Scale**: $45/month (or $35/month annual) - 2 TB, AgentBucket memory (200,000 chunks), 2 teams with 10 members each
 
 ## Pages
 
 - [Home](https://bucket0.com): Product overview
-- [Docs](https://bucket0.com/docs): AgentBucket and S3 API guides
+- [AgentBucket](https://bucket0.com/agentbucket): Persistent file storage for AI agents
+- [Docs](https://bucket0.com/docs): AgentBucket API, MCP server and S3 API guides
 - [Pricing](https://bucket0.com/pricing): Plan comparison
 - [Tools](https://bucket0.com/tools): Free PDF and image tools
 - [Auth for agents](https://bucket0.com/auth.md): Credential registration

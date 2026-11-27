@@ -49,7 +49,7 @@ export function CredentialCard({
               className="p-1 text-muted-foreground hover:text-foreground transition-colors"
             >
               {copiedField === copyFieldId ? (
-                <MdOutlineCheck size={14} className="text-green-500" />
+                <MdOutlineCheck size={14} className="text-success" />
               ) : (
                 <MdOutlineContentCopy size={14} />
               )}

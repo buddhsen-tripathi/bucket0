@@ -30,8 +30,8 @@ export default function DuplicateFileModal({
       <div className="bg-card rounded-sm shadow-xl max-w-md w-full border border-border">
         {/* Header */}
         <div className="flex items-center gap-3 p-4 border-b border-border">
-          <div className="p-2 bg-amber-500/10 rounded-sm">
-            <AlertTriangle className="text-amber-500" size={20} />
+          <div className="p-2 bg-warning/10 rounded-sm">
+            <AlertTriangle className="text-warning" size={20} />
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-foreground">

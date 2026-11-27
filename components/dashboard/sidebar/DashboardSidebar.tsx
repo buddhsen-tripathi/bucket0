@@ -503,7 +503,7 @@ export default function DashboardSidebar({
                               <MdOutlineGroup size={14} className="flex-shrink-0" />
                               <span className="truncate">{team.name}</span>
                               {team.isOwner && (
-                                <Crown size={12} className="text-amber-500 flex-shrink-0" />
+                                <Crown size={12} className="text-warning flex-shrink-0" />
                               )}
                             </button>
                           </div>

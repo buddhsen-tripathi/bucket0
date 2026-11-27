@@ -301,7 +301,7 @@ export default function MembersList({
             <h3 className="font-semibold text-foreground flex items-center gap-2">
               <Mail size={18} />
               Pending Invitations
-              <span className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full">
+              <span className="text-xs bg-warning/10 text-warning dark:text-warning px-2 py-0.5 rounded-full">
                 {invitations.length}
               </span>
             </h3>
@@ -313,8 +313,8 @@ export default function MembersList({
                 className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-amber-500" />
+                  <div className="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-warning" />
                   </div>
                   <div>
                     <p className="font-medium text-foreground">{invitation.email}</p>
@@ -371,7 +371,7 @@ export default function MembersList({
                     {member.user?.name || member.user?.email || "Unknown User"}
                   </span>
                   {member.isOwner && (
-                    <span className="flex items-center gap-1 text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded">
+                    <span className="flex items-center gap-1 text-xs bg-warning/10 text-warning dark:text-warning px-1.5 py-0.5 rounded">
                       <Crown size={10} />
                       Owner
                     </span>

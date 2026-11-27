@@ -1,40 +1,54 @@
-
+import type { PointerEvent } from "react";
 import Link from "@/web/compat/link";
-import { motion } from "framer-motion";
+import { ArrowRightIcon } from "@/components/icons";
 import type { Tool } from "./tool-config";
 
-interface ToolCardProps {
-  tool: Tool;
-  index: number;
+/** Records the pointer position on the card so its spotlight and lit edge follow the cursor. */
+function track(e: PointerEvent<HTMLElement>) {
+  const r = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty("--x", `${e.clientX - r.left}px`);
+  e.currentTarget.style.setProperty("--y", `${e.clientY - r.top}px`);
 }
 
-export default function ToolCard({ tool, index }: ToolCardProps) {
+const glow = "pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100";
+
+/** One tool in a directory grid: icon, name, one line on what it does, and its path. */
+export default function ToolCard({ tool }: { tool: Tool }) {
   const Icon = tool.icon;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
+    <Link
+      href={`/tools/${tool.slug}`}
+      onPointerMove={track}
+      className="group relative isolate flex h-full rounded-[10px] bg-[var(--line)] p-px outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ink)]"
     >
-      <Link href={`/tools/${tool.slug}`}>
-        <div className="group relative h-full bg-card border border-border rounded p-6 hover:border-primary/30 transition-colors duration-300 overflow-hidden">
-          {/* Gradient overlay on hover — matches bento cards */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-          <div className="relative">
-            <div
-              className={`w-10 h-10 rounded-xl ${tool.iconBgClass} flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300`}
-            >
-              <Icon className={`w-5 h-5 ${tool.colorClass}`} />
-            </div>
-            <h3 className="font-semibold text-foreground mb-1">{tool.name}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {tool.description}
-            </p>
-          </div>
+      {/* The edge: a violet light under the 1px border that follows the pointer. */}
+      <span
+        aria-hidden
+        className={glow}
+        style={{ background: "radial-gradient(300px circle at var(--x, 50%) var(--y, 50%), var(--violet), transparent 65%)" }}
+      />
+      <div className="relative flex w-full flex-col overflow-hidden rounded-[9px] bg-[var(--paper-card)] p-5">
+        <span
+          aria-hidden
+          className={glow}
+          style={{ background: "radial-gradient(320px circle at var(--x, 50%) var(--y, 50%), var(--violet-soft), transparent 70%)" }}
+        />
+        <div className="relative flex items-start justify-between gap-4">
+          <span className="grid size-9 place-items-center rounded-[7px] border border-[var(--line)] bg-[var(--paper)] text-[var(--ink)] transition-colors duration-300 group-hover:border-[var(--ink)] group-hover:bg-[var(--ink)] group-hover:text-[var(--paper)]">
+            <Icon aria-hidden strokeWidth={1.6} className="size-[18px]" />
+          </span>
+          <ArrowRightIcon
+            aria-hidden
+            className="size-4 -translate-x-1 text-[var(--ink)] opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-x-0 group-hover:opacity-100"
+          />
         </div>
-      </Link>
-    </motion.div>
+        <h3 className="relative mt-5 text-[15px] font-medium tracking-[-0.01em] text-[var(--ink)]">{tool.name}</h3>
+        <p className="relative mt-1.5 text-[13.5px] leading-relaxed text-[var(--ink-soft)]">{tool.description}</p>
+        <p className="relative mt-auto pt-4 font-mono text-[11.5px] text-[var(--ink-soft)] transition-colors group-hover:text-[var(--violet)]">
+          /tools/{tool.slug}
+        </p>
+      </div>
+    </Link>
   );
 }

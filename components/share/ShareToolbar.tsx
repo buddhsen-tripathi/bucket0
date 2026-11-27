@@ -122,7 +122,7 @@ export default function ShareToolbar({
               disabled={addingToDrive || addedToDrive}
               className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
                 addedToDrive
-                  ? "bg-emerald-500/10 text-emerald-600 cursor-default"
+                  ? "bg-success/10 text-success cursor-default"
                   : "bg-muted hover:bg-muted/70 text-foreground"
               } disabled:opacity-50`}
               title={

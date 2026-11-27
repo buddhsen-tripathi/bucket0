@@ -21,22 +21,22 @@ export default function PromoBanner({ onDismiss }: { onDismiss: () => void }) {
   return (
     <motion.div
       key="promo-banner"
-      initial={{ y: -40, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -40, opacity: 0 }}
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: 36, opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-[60] h-10 bg-primary text-primary-foreground"
+      className="relative z-[60] h-9 overflow-hidden bg-[var(--ink)] text-[var(--paper)]"
       role="banner"
     >
-      <div className="relative mx-auto flex h-full max-w-6xl items-center justify-center gap-2 px-10 text-center text-sm font-medium sm:px-12">
+      <div className="relative mx-auto flex h-full max-w-6xl items-center justify-center gap-2 px-10 text-center text-[13px] sm:px-12">
         <p className="flex items-center gap-1.5 truncate">
           <span>
-            Get <span className="font-bold">15% off</span> any plan with code
+            Get <span className="font-medium">15% off</span> any plan with code
           </span>
           <button
             type="button"
             onClick={copyCode}
-            className="inline-flex items-center gap-1 rounded bg-primary-foreground/15 px-1.5 py-0.5 font-mono text-[13px] font-semibold tracking-wide transition-colors hover:bg-primary-foreground/25"
+            className="inline-flex items-center gap-1 rounded-[3px] bg-[var(--paper)]/15 px-1.5 py-0.5 font-mono text-[12px] tracking-wide transition-colors hover:bg-[var(--paper)]/25"
             aria-label={copied ? "Code copied" : "Copy promo code"}
             title={copied ? "Copied!" : "Copy code"}
           >
@@ -52,7 +52,7 @@ export default function PromoBanner({ onDismiss }: { onDismiss: () => void }) {
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss promo banner"
-          className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-primary-foreground/80 transition-colors hover:bg-primary-foreground/15 hover:text-primary-foreground sm:right-3"
+          className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-[var(--paper)]/70 transition-colors hover:bg-[var(--paper)]/15 hover:text-[var(--paper)] sm:right-3"
         >
           <X className="h-4 w-4" />
         </button>
